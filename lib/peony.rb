@@ -1,5 +1,7 @@
 require "peony/version"
+require "peony/configuration"
 
-module Peony
-  # Your code goes here...
+load 'recipes/base'
+
+Peony::Configuration.instance.instance_eval do
 end
