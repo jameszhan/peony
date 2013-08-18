@@ -20,14 +20,13 @@ if ARGV.delete('--simulate') || ARGV.delete('-S')
   ENV['simulate'] = '1'
 end
 
-scope = self
-
 Rake.application.instance_eval do
   standard_exception_handling do
-    init 'peony'
     
+    init 'peony'
+
     # Load the Peony DSL.
-    extend Peony::Utils
+    require 'peony/rake'
     
     load_rakefile
     
