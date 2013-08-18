@@ -94,8 +94,8 @@ module Peony
     # Returns the value.
     #
     #     set :domain, 'kickflip.me'
-    def set(key, value)
-      settings.send :"#{key}=", value
+    def set(key, *args, &block)
+      settings.send :"#{key}=", *args, block
     end
 
     # ### set_default
@@ -111,8 +111,8 @@ module Peony
     #     set :term_mode, :system
     #     set_default :term_mode, :pretty
     #     settings.term_mode.should == :system
-    def set_default(key, value)
-      settings.send :"#{key}=", value  unless settings.send(:"#{key}?")
+    def set_default(key, *args, &block)
+      set(key, *args, block) unless settings.send(:"#{key}?")
     end
 
     # ### settings
