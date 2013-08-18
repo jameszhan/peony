@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+$:.unshift File.expand_path('../../lib', __FILE__)
+
+require 'rubygems' unless Object.const_defined?(:Gem)
+require 'peony'
+require 'rake'
+
+# Intercept: if invoked as 'peony --help', don't let it pass through Rake, or else
+# we'll see the Rake help screen. Redirect it to 'peony help'.
+if ARGV.delete('--help') || ARGV.delete('-h')
+  ARGV << 'help'
+end
+
+if ARGV.delete('--version') || ARGV.delete('-V')
+  puts "Peony, version v#{Peony.version}"
+  exit
+end
+
+if ARGV.delete('--simulate') || ARGV.delete('-S')
+  ENV['simulate'] = '1'
+end
+
+scope = self
+
+Rake.application.instance_eval do
+  standard_exception_handling do
+    init 'peony'
+    
+    # Load the Peony DSL.
+    extend Peony::Utils
+    
+    load_rakefile
+    
+    top_level
+  end
+end
+
