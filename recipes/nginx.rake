@@ -2,6 +2,7 @@ set_default :nginx, ->{"/usr/local/bin/nginx"}
 set_default :nginx_home,    ->{`brew --prefix nginx`.strip}
 set_default :nginx_etc_dir, ->{"#{etc_dir}/nginx"}
 set_default :nginx_run_dir, ->{"#{run_dir}/nginx"}
+set_default :nginx_prefix, ->{"#{log_dir}/nginx"}
 
 set_default :worker_processes, 8
             
@@ -17,15 +18,15 @@ set_default :ssl_certificate_key, ->{"#{etc_dir}/ssl/server.key"}
 
 
 def nginx_start_cmd(name)
-  "#{nginx} -c #{nginx_etc_dir}/#{name}.conf"
+  "#{nginx} -c #{nginx_etc_dir}/#{name}.conf -p #{nginx_prefix}"
 end
 
 def nginx_stop_cmd(name)
-  "#{nginx} -s quit -c #{nginx_etc_dir}/#{name}.conf"
+  "#{nginx} -s quit -c #{nginx_etc_dir}/#{name}.conf -p #{nginx_prefix}"
 end
 
 def nginx_reload_cmd(name)
-  "#{nginx} -s reload -c #{nginx_etc_dir}/#{name}.conf"
+  "#{nginx} -s reload -c #{nginx_etc_dir}/#{name}.conf -p #{nginx_prefix}"
 end
 
 def nginx_restart(name)
@@ -37,12 +38,13 @@ end
 
 namespace :nginx do
   task :init do
-    [nginx_etc_dir, nginx_run_dir].each do|dir|
+    [nginx_etc_dir, nginx_run_dir, nginx_prefix].each do|dir|
       FileUtils.mkdir_p(dir) unless File.exists?(dir)
       fail "#{dir} must be a directory!" unless File.directory?(dir)
     end
     unless File.exists?("#{nginx_etc_dir}/conf")
-      FileUtils.cp_r(find_templates("nginx/conf").first, nginx_etc_dir)
+      FileUtils.cp_r(find_templates("nginx/conf", false).first, nginx_etc_dir)
     end
+    FileUtils.mkdir_p("#{nginx_etc_dir}/site-enabled") unless File.exists?("#{nginx_etc_dir}/site-enabled")
   end
 end

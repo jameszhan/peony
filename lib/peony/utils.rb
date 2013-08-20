@@ -26,7 +26,7 @@ module Peony
     end
     
     def template(from, to, override=false)
-      template = find_template(from).first
+      template = find_templates(from).first
       raise "Can't find tempalte #{from} in directory #{search_paths}." unless template
       raise "File #{to} have already exists." if !override && File.exists?(to)
       open(to, "w+") do|out|
@@ -146,7 +146,7 @@ module Peony
       ["#{Dir.pwd}/templates", File.expand_path("../../templates", __dir__)]
     end    
     
-    def find_template(name, file_only=true)
+    def find_templates(name, file_only=true)
       templates = []
       search_paths.each do|path|
         templates += Dir[File.expand_path(name, path)].reject{|filename| file_only && File.directory?(filename) }
