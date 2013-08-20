@@ -29,6 +29,7 @@ module Peony
       template = find_templates(from).first
       raise "Can't find tempalte #{from} in directory #{search_paths}." unless template
       raise "File #{to} have already exists." if !override && File.exists?(to)
+      puts "copy #{template} to #{to}"
       open(to, "w+") do|out|
         out.write(erb(template))
       end

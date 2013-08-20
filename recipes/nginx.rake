@@ -45,6 +45,6 @@ namespace :nginx do
     unless File.exists?("#{nginx_etc_dir}/conf")
       FileUtils.cp_r(find_templates("nginx/conf", false).first, nginx_etc_dir)
     end
-    FileUtils.mkdir_p("#{nginx_etc_dir}/site-enabled") unless File.exists?("#{nginx_etc_dir}/site-enabled")
+    FileUtils.mkdir_p("#{nginx_etc_dir}/sites-enabled") unless File.exists?("#{nginx_etc_dir}/sites-enabled")
   end
 end
