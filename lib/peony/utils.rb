@@ -2,6 +2,12 @@ require 'peony/template_binding'
 
 module Peony
   module Utils
+        
+    def sudo(cmd)
+      sh "sudo #{cmd}" do |res, stat|
+        yield res, stat
+      end
+    end
 
     # ### invoke
     # Invokes another Rake task.
@@ -42,8 +48,7 @@ module Peony
     # Returns the output string of the ERB template.
     def erb(file, b=binding)
       require 'erb'
-      erb = ERB.new(File.read(file))
-      erb.result b
+      ERB.new(File.read(file), nil, "-").result(b)
     end
 
     # ### report_time

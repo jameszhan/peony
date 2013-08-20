@@ -6,6 +6,9 @@ set_default :log_dir, ->{"#{var_dir}/log"}
 set_default :www_dir, ->{"#{var_dir}/www"}
 set_default :data_dir, ->{"#{var_dir}/data"}
 
+set_default :user, "James"
+set_default :group, "admin"
+
 namespace :settings do
   task :list do
     settings.each do|k, v|
