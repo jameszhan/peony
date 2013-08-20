@@ -1,3 +1,5 @@
+require 'peony/template_binding'
+
 module Peony
   module Utils
 
@@ -15,6 +17,15 @@ module Peony
     def invoke(task, options = {})
       Rake.application.invoke_task task
       Rake::Task[task].reenable if options[:reenable]
+    end
+    
+    def template(from, to, override=false)
+      template = find_template(from).first
+      raise "Can't find tempalte #{from} in directory #{search_paths}." unless template
+      raise "File #{to} have already exists." if !override && File.exists?(to)
+      open(to, "w+") do|out|
+        out.write(erb(template))
+      end
     end
 
     # ### erb
@@ -124,7 +135,11 @@ module Peony
     #     domain           #=> 'kickflip.me'
     def settings
       @settings ||= Settings.new
-    end
+    end    
+    
+    def search_paths
+      ["#{Dir.pwd}/templates", File.expand_path("../../templates", __dir__)]
+    end    
 
     # ### method_missing
     # Hook to get settings.
@@ -134,5 +149,19 @@ module Peony
     def method_missing(meth, *args, &blk)
       settings.send meth, *args
     end
+
+    private
+      def template_binding
+        @template_binding ||= TemplateBinding.new(settings)
+        @template_binding.context_binding
+      end
+
+      def find_template(name)
+        templates = []
+        search_paths.each do|path|
+          templates += Dir[File.expand_path(name, path)].reject{|filename| File.directory?(filename) }
+        end
+        templates
+      end
   end
 end
