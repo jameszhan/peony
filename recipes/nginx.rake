@@ -38,10 +38,11 @@ end
 namespace :nginx do
   task :init do
     [nginx_etc_dir, nginx_run_dir].each do|dir|
-      if !FileTest.exists?(dir)
-        FileUtils.mkdir_p(dir)
-      end
-      fail "#{dir} must be a directory!" unless FileTest.directory?(dir)
+      FileUtils.mkdir_p(dir) unless File.exists?(dir)
+      fail "#{dir} must be a directory!" unless File.directory?(dir)
+    end
+    unless File.exists?("#{nginx_etc_dir}/conf")
+      FileUtils.cp_r(find_templates("nginx/conf").first, nginx_etc_dir)
     end
   end
 end

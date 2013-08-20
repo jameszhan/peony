@@ -145,6 +145,14 @@ module Peony
     def search_paths
       ["#{Dir.pwd}/templates", File.expand_path("../../templates", __dir__)]
     end    
+    
+    def find_template(name, file_only=true)
+      templates = []
+      search_paths.each do|path|
+        templates += Dir[File.expand_path(name, path)].reject{|filename| file_only && File.directory?(filename) }
+      end
+      templates
+    end
 
     # ### method_missing
     # Hook to get settings.
@@ -159,14 +167,6 @@ module Peony
       def template_binding
         @template_binding ||= TemplateBinding.new(settings)
         @template_binding.context_binding
-      end
-
-      def find_template(name)
-        templates = []
-        search_paths.each do|path|
-          templates += Dir[File.expand_path(name, path)].reject{|filename| File.directory?(filename) }
-        end
-        templates
       end
   end
 end
