@@ -6,6 +6,7 @@ set_default :pg_data_dir, ->{"#{data_dir}/pgsql"}
 set_default :pg_init, ->{"#{pg_initdb} -D #{pg_data_dir} --debug"}
 set_default :pg_start, ->{"#{pg_ctl} -D #{pg_data_dir} -l #{log_dir}/pgsql.log start"}
 set_default :pg_stop, ->{"#{pg_ctl} -D #{pg_data_dir} stop"}
+set_default :pg_reload, ->{"#{pg_ctl} -D #{pg_data_dir} reload"}
 set_default :pg_restart, ->{"#{pg_ctl} -D #{pg_data_dir} -l #{log_dir}/pgsql.log restart"}
 
 set_default :pg_super_users, {
@@ -35,7 +36,7 @@ namespace :db do
       end
     end
     
-    [:start, :stop, :restart].each do|cmd|
+    [:start, :stop, :restart, :reload].each do|cmd|
       task cmd do
         sh self.send("pg_#{cmd}") do|res, stat|
           puts stat.inspect if !res
