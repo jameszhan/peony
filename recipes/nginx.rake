@@ -7,7 +7,7 @@ set_default :nginx_prefix, ->{"#{log_dir}/nginx"}
 set_default :worker_processes, 8
             
 set_default :upstreams, [
-  {name: :fastcgi, servers: ["127.0.0.1:6666"]}, 
+  {name: :fastcgi_server, servers: ["127.0.0.1:6666"]}, 
 ]
 
 set_default :server_name, "localhost"

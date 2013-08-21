@@ -7,6 +7,7 @@ namespace :nginx do
     task :init do
       template("nginx/www.conf.erb", "#{nginx_etc_dir}/www.conf", true)
       template("nginx/sites-enabled/static.conf.erb", "#{nginx_etc_dir}/sites-enabled/static.http.conf", true) unless www_paths.empty?
+      template("nginx/sites-enabled/php.conf.erb", "#{nginx_etc_dir}/sites-enabled/php.http.conf", true)
     end
     
     [:start, :stop, :reload].each do|t|

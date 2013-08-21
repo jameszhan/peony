@@ -48,7 +48,7 @@ module Peony
       raise "File #{to} have already exists." if !override && File.exists?(to)
       puts "copy #{template} to #{to}"
       open(to, "w+") do|out|
-        out.write(erb(template))
+        out.write(erb(template, template_binding))
       end
     end
 
