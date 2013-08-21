@@ -12,20 +12,15 @@ set_default :elasticsearch_shutdown, ->{"curl -XPOST 'http://#{es_network_host}:
 
 namespace :elasticsearch do
   
-  task :init do
-    ["#{etc_dir}/elasticsearch"].each do|dir|
-      FileUtils.mkdir_p(dir) unless File.exists?(dir)
-      fail "#{dir} must be a directory!" unless File.directory?(dir)
-    end       
+  task :init do  
+    mkdir_p("#{etc_dir}/elasticsearch")
     template("elasticsearch/config.yml.erb", es_config)
     template("elasticsearch/logging.yml.erb", "#{etc_dir}/elasticsearch/logging.yml")
   end
   
   [:start, :stop, :shutdown].each do|cmd|
     task cmd do     
-      sh self.send("elasticsearch_#{cmd}") do|res, stat|
-        puts stat.inspect if !res
-      end
+      run self.send("elasticsearch_#{cmd}")
     end
   end
 end

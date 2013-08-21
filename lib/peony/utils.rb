@@ -3,9 +3,26 @@ require 'peony/template_binding'
 module Peony
   module Utils
         
-    def sudo(cmd)
-      sh "sudo #{cmd}" do |res, stat|
-        yield res, stat
+    def sudo(cmd, &block)
+      run "sudo #{cmd}", &block
+    end
+    
+    def run(cmd)
+      sh cmd do|res, stat|
+        if block_given?
+          yield res, stat
+        else
+          puts stat.inspect unless res
+        end
+      end
+    end
+    
+    def mkdir_p(*dirs)
+      dirs.each do|dir|
+        if !FileTest.exists?(dir)
+          FileUtils.mkdir_p(dir)
+        end
+        fail "#{dir} must be a directory!" unless FileTest.directory?(dir)
       end
     end
 

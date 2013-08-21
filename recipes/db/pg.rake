@@ -19,9 +19,7 @@ namespace :db do
       if File.exists?("#{pg_data_dir}/postgresql.conf")
         puts "Postgresql database has already initialized."
       else
-        sh pg_init do |res, stat|
-          puts stat.inspect if !res
-        end
+        run pg_init
       end
     end
     
@@ -29,18 +27,14 @@ namespace :db do
       pg_super_users.each do|user, password|
         sqls = ["CREATE USER #{user} WITH PASSWORD '#{password}';", "ALTER USER #{user} WITH SUPERUSER;"]
         sqls.each do|sql|
-          sh "psql -d postgres -c \"#{sql}\"" do|res, stat|
-            puts stat.inspect if !res
-          end
+          run "psql -d postgres -c \"#{sql}\""
         end        
       end
     end
     
     [:start, :stop, :restart, :reload].each do|cmd|
       task cmd do
-        sh self.send("pg_#{cmd}") do|res, stat|
-          puts stat.inspect if !res
-        end
+        run self.send("pg_#{cmd}")
       end
     end
   end

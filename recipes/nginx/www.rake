@@ -11,9 +11,7 @@ namespace :nginx do
     
     [:start, :stop, :reload].each do|t|
       task t do
-        sudo self.send("nginx_#{t}_cmd", :www) do|res, stat|
-          puts stat.inspect if !res
-        end
+        sudo self.send("nginx_#{t}_cmd", :www)
       end
     end
     
