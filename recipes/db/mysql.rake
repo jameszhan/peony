@@ -44,12 +44,8 @@ namespace :db do
     end
 
     namespace :web do
-      task :init do
-        template("mysql/phpmyadmin.conf.erb", phpmyadmin_conf, true)
-      end
-      
-      [:start, :reload, :stop].each do|t|
-        task t => "nginx:www:#{t}"
+      [:start, :stop].each do|t|
+        task t => ["nginx:www:#{t}", "php:fcgi:#{t}"]
       end
     end        
   end
