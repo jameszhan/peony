@@ -1,0 +1,21 @@
+# Store data in <%= mongo_slave_dir %> instead of the default /data/db
+dbpath = <%= mongo_slave_dir %>
+
+# Only accept local connections
+#bind_ip = 127.0.0.1
+
+logpath = <%= mongo_log_dir %>/<%= mongo_slave_name %>.log
+
+pidfilepath = <%= mongo_run_dir %>/<%= mongo_slave_name %>.pid
+
+fork = <%= mongo_fork %>
+
+jsonp = <%= mongo_jsonp %>
+
+rest = <%= mongo_rest %>
+
+slave = true
+
+port = <%= mongo_slave_port %>
+
+source = <%= mongo_slave_source %>
