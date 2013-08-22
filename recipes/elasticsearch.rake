@@ -12,6 +12,7 @@ set_default :elasticsearch_shutdown, ->{"curl -XPOST 'http://#{es_network_host}:
 
 namespace :elasticsearch do
   
+  desc "Initialize elasticsearch directory and copy it's config files to etc path."
   task :init do  
     mkdir_p("#{etc_dir}/elasticsearch")
     template("elasticsearch/config.yml.erb", es_config)
@@ -19,6 +20,7 @@ namespace :elasticsearch do
   end
   
   [:start, :stop, :shutdown].each do|cmd|
+    desc "#{cmd} elasticsearch."
     task cmd do     
       run self.send("elasticsearch_#{cmd}")
     end

@@ -11,6 +11,7 @@ set_default :user, "James"
 set_default :group, "admin"
 
 namespace :settings do
+  desc "List all the settings."
   task :list do
     settings.each do|k, v|
       puts "#{k} = #{settings.send(k)}"

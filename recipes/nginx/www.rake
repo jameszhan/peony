@@ -4,6 +4,7 @@ set_default :www_paths, {}
 
 namespace :nginx do
   namespace :www do
+    desc "Create www config files."
     task :init do
       template("nginx/www.conf.erb", "#{nginx_etc_dir}/www.conf", true)
       template("nginx/sites-enabled/static.conf.erb", "#{nginx_etc_dir}/sites-enabled/static.http.conf", true) unless www_paths.empty?
@@ -11,11 +12,13 @@ namespace :nginx do
     end
     
     [:start, :stop, :reload].each do|t|
+      desc "#{t} nginx www instance."
       task t do
         sudo self.send("nginx_#{t}_cmd", :www)
       end
     end
     
+    desc "Restart nginx www instance."
     task :restart do
       nginx_restart(:www)
     end

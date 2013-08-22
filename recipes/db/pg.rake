@@ -15,6 +15,8 @@ set_default :pg_super_users, {
 
 namespace :db do
   namespace :pg do
+    
+    desc "Execute postgres initdb."
     task :init do
       if File.exists?("#{pg_data_dir}/postgresql.conf")
         puts "Postgresql database has already initialized."
@@ -23,6 +25,7 @@ namespace :db do
       end
     end
     
+    desc "Set super users for postgresql."
     task :set_super_users do
       pg_super_users.each do|user, password|
         sqls = ["CREATE USER #{user} WITH PASSWORD '#{password}';", "ALTER USER #{user} WITH SUPERUSER;"]
@@ -33,6 +36,7 @@ namespace :db do
     end
     
     [:start, :stop, :restart, :reload].each do|cmd|
+      desc "#{cmd} postgresql instance."
       task cmd do
         run self.send("pg_#{cmd}")
       end

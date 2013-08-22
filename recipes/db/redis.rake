@@ -20,12 +20,14 @@ set_default :redis_activerehashing, "yes"
 
 namespace :db do
   namespace :redis do
+    desc "Initialize redis directory and copy redis.conf to etc directory."
     task :init do
       mkdir_p(redis_dir)
       template("redis.conf.erb", redis_conf)
     end
     
     [:start, :stop, :restart].each do|cmd|
+      desc "#{cmd} redis"
       task cmd do     
         run self.send("redis_#{cmd}")
       end

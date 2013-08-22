@@ -21,12 +21,11 @@ set_default :mysql_start, ->{"#{mysqld}  --defaults-file=#{mysql_conf} --datadir
 set_default :mysql_stop, ->{"#{mysqladmin} --verbose --user=#{mysql_user} --password=#{mysql_password} shutdown"}
 set_default :mysql_status, ->{"#{mysqladmin} --verbose status variables"}
 
-set_default :phpmyadmin_root, ->{"#{www_dir}/phpMyAdmin"}
-set_default :phpmyadmin_conf, ->{"#{nginx_etc_dir}/sites-enabled/#{phpmyadmin.http.conf}"}
-
 namespace :db do
   
   namespace :mysql do
+    
+    desc "Create mysql directorys, config file and run mysql_install_db"
     task :init do
       mkdir_p(mysql_dir, mysql_log_dir, "#{run_dir}/mysql/")
       template("mysql/my.cnf.erb", mysql_conf, true)
@@ -34,17 +33,20 @@ namespace :db do
     end
     
     [:start, :stop, :status].each do|t|
+      desc "#{t} mysql instance."
       task t do
         run self.send("mysql_#{t}")
       end
     end
     
+    desc "Set mysql root user password."
     task :set_root_pass do
       run "mysqladmin --no-defaults --port=#{mysql_port} --user=root --protocol=tcp password '#{mysql_password}'"
     end
-
+    
     namespace :web do
       [:start, :stop].each do|t|
+        desc "#{t} phpMyAdmin, please put the phpMyAdmin to #{www_dir}"
         task t => ["nginx:www:#{t}", "php:fcgi:#{t}"]
       end
     end        

@@ -37,6 +37,7 @@ def nginx_restart(name)
 end
 
 namespace :nginx do
+  desc "Initialize nginx directory and create it's config files."
   task :init do
     mkdir_p(nginx_etc_dir, nginx_run_dir, nginx_prefix)
     unless File.exists?("#{nginx_etc_dir}/conf")

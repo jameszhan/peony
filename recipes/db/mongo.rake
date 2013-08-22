@@ -29,14 +29,18 @@ set_default :mongo_slave_stop, ->{"kill -2 `cat #{mongo_run_dir}/#{mongo_slave_n
 
 namespace :db do  
   namespace :mongo do
+    
+    desc "Create the directory for mongodb, and copy mongo config file to etc directory."
     task :init do
       mkdir_p(mongo_master_dir, mongo_slave_dir, mongo_etc_dir, mongo_log_dir, mongo_run_dir)
       template("mongo/master.conf.erb", mongo_master_conf, true)
       template("mongo/slave.conf.erb", mongo_slave_conf, true)
     end
+    
     [:master, :slave].each do|ns|
-      namespace ns do
+      namespace ns do        
         [:start, :stop].each do|t|
+          desc "#{t} mongodb #{ns}"
           task t do
             run self.send("mongo_#{ns}_#{t}")
           end
@@ -44,9 +48,11 @@ namespace :db do
       end
     end
     
+    desc "Start the master mongodb instance"
     task :start => "master:start" do
     end
     
+    desc "Stop the master mongodb instance"
     task :stop => "master:stop" do
     end
   end
