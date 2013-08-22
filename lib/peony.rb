@@ -1,4 +1,5 @@
 require "peony/version"
+require "peony/application"
 
 module Peony
   PREFIX = File.dirname(__FILE__)
