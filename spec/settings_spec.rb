@@ -28,7 +28,7 @@ describe Peony::Settings do
       @settings.email.should == 'zhiqiangzhan@gmail.com'
     end
     
-    it 'setting default value should value' do
+    it 'setting set default value should be work' do
       @settings.send(:x=, 1){ 3 }
       @settings.x.should == 1
       @settings.send(:y=, nil){ 3 }
@@ -37,8 +37,10 @@ describe Peony::Settings do
       @settings.z.should == 6
     end
     
-    it 'setting get default value should value' do
-      @settings.x{1}.should == 1
+    
+    it 'setting get default value should be work' do
+      @settings.x = -1
+      @settings.x{1}.should == -1
       @settings.y{3}.should == 3
       @settings.z{6}.should == 6
     end

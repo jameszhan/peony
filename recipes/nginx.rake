@@ -12,7 +12,7 @@ set_default :upstreams, [
 
 set_default :server_name, "localhost"
 
-set_default :use_ssl, true
+set_default :use_ssl, false
 set_default :ssl_certificate,	    ->{"#{etc_dir}/ssl/server.crt"}	  
 set_default :ssl_certificate_key, ->{"#{etc_dir}/ssl/server.key"}
 

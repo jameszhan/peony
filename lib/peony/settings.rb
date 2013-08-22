@@ -12,9 +12,11 @@ module Peony
         raise Error, "Setting :#{key} is not set" unless include?(key)
         evaluate self[key]
       else
-        ret = evaluate self[method]
-        ret = block.call unless block.nil?
-        ret
+        if include? method
+          evaluate self[method]
+        else
+          block.call unless block.nil? 
+        end
       end
     end
 

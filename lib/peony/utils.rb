@@ -1,5 +1,3 @@
-require 'peony/template_binding'
-
 module Peony
   module Utils
         
@@ -48,7 +46,7 @@ module Peony
       raise "File #{to} have already exists." if !override && File.exists?(to)
       puts "copy #{template} to #{to}"
       open(to, "w+") do|out|
-        out.write(erb(template, template_binding))
+        out.write(erb(template))
       end
     end
 
@@ -178,13 +176,12 @@ module Peony
     #
     # Returns things.
     def method_missing(meth, *args, &blk)
-      settings.send meth, *args
+      if settings.include? meth 
+        settings.send meth, *args, &blk
+      else
+        super
+      end
     end
 
-    private
-      def template_binding
-        @template_binding ||= TemplateBinding.new(settings)
-        @template_binding.context_binding
-      end
   end
 end
