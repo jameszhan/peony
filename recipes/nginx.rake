@@ -8,6 +8,7 @@ set_default :worker_processes, 8
             
 set_default :upstreams, [
   {name: :fastcgi_server, servers: ["127.0.0.1:6666"]}, 
+  {name: :catalina_server, servers: ["127.0.0.1:8080"]}
 ]
 
 set_default :server_name, "localhost"

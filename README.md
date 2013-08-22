@@ -1,6 +1,7 @@
 # Peony
 
 Local Script Management System Using Rake
+(是不是为记不住经常用的脚本和配置而烦恼！ 让Peony把你的脚本和配置记录下来。)
 
 ## Installation
 
@@ -21,7 +22,7 @@ Peony inherits from Rake, and added many useful methods for you to write rake sc
 
 If you want to run nginx server on your local server, you can add the following to your Rakefile
     
-    set :base_dir, "/opt"
+    set :base_dir, "/u"
     set_default :www_http_port, 80
     set :www_paths, {
       "/homebrew" => "/Library/Caches/Homebrew"
@@ -48,6 +49,37 @@ you can just add the following code to your Rakefile
     modules.each do|f|
       load f
     end
+    
+
+## Directory Convension
+<pre>
+
+  |--u
+    |--bin
+    |--etc
+       |--my.cnf
+       |--nginx
+       |--mongo
+       |--httpd
+       |--elasticsearch
+       |--...
+    |--share
+       |--apache-tomcat-6.0.32
+       |--php-5.3.10
+       |--...
+    |--var
+       |--data
+          |--mysql
+          |--pgsql
+          |--mongo
+          |--elasticsearch
+          |--redis
+       |--log
+       |--run
+       |--tmp
+       |--www
+</pre>
+
 
 
 ## Contributing
