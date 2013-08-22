@@ -1,3 +1,3 @@
 extend Peony::Utils
 
-require 'peony/default'
+require "peony/default"

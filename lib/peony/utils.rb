@@ -1,5 +1,11 @@
 module Peony
   module Utils
+    
+    def parse_args
+      ARGV.each do|arg|
+        set $1.strip.to_sym, $2 if arg =~ /([^=]+)=(.+)/
+      end
+    end
         
     def sudo(cmd, &block)
       run "sudo #{cmd}", &block
