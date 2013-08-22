@@ -18,16 +18,43 @@ Or install it yourself as:
     $ gem install peony
 
 ## Usage
+
+### Simple Example
 Peony inherits from Rake, and added many useful methods for you to write rake scripts.
 
+~~~ruby
+
+	set :from, "Jack"
+	set :to, "Tom"
+	
+	namespace :hello do
+	  task :run do
+	    run "echo '#{from} say hello to #{to}.'"
+	  end
+	end
+~~~
+
+    peony hello:run
+    #Jack say hello to Tom
+    peony hello:run from=James
+    #James say hello to Tom 
+
+
+
+   
+## Useful recipes
 If you want to run nginx server on your local server, you can add the following to your Rakefile
-    
-    set :base_dir, "/u"
-    set_default :www_http_port, 80
+
+~~~ruby
+
+	set :base_dir, "/u"
+    set :www_http_port, 80
     set :www_paths, {
       "/homebrew" => "/Library/Caches/Homebrew"
     }
     set :nginx, "/usr/local/bin/nginx"
+    
+~~~
     
 Execute the following commands 
 
@@ -50,6 +77,11 @@ you can just add the following code to your Rakefile
       load f
     end
     
+
+
+
+
+
 
 ## Directory Convension
 <pre>
