@@ -19,7 +19,7 @@ namespace :httpd do
   task :init do
     mkdir_p(httpd_etc_dir, "#{httpd_etc_dir}/extra", httpd_log_dir, webdav_dir)
     search_paths.each do|sp|
-      Dir["#{sp}/httpd/**/*.erb"].each do|fn|
+      Dir["#{sp}/httpd/conf/*.erb"].each do|fn|
         target = fn.sub("#{sp}/httpd", "#{httpd_etc_dir}").sub(/.erb$/, "")
         template(fn, target) unless File.exists?(target)
       end

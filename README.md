@@ -77,13 +77,31 @@ you can just add the following code to your Rakefile
       load f
     end
     
-
-
-
-
-
+    
 
 ## Directory Convension
+
+### template and recipes
+<pre>
+  |--peony_root
+     |--Rakefile
+     |--recipes
+        |--nginx.rake
+        |--pgsql.rake
+        |--...
+     |--templates
+        |--nginx.conf.erb
+        |--pgsql.conf.erb
+        |--...
+</pre>
+
+if you want to run peony command in any directory, you can add peony_root to your environment.
+
+    export peony_root=/u/bin
+    
+    
+
+### generated directory convension
 <pre>
 
   |--u
