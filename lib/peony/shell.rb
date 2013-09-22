@@ -111,6 +111,10 @@ module Peony
         $stderr
       end
       
+      def quiet? #:nodoc:
+        mute? || (base && base.options[:quiet])
+      end
+      
       def ask_simply(statement, color=nil)
         say("#{statement} ", color)
         stdin.gets.tap{|text| text.strip! if text}
