@@ -1,5 +1,32 @@
 module Peony
   module Shell
+    attr_accessor :base
+    attr_reader   :padding
+    
+    def initialize
+      @base, @mute, @padding = nil, false, 0
+    end      
+    
+    # Mute everything that's inside given block
+    def mute
+      @mute = true
+      yield
+    ensure
+      @mute = false
+    end
+
+    # Check if base is muted
+    #
+    def mute?
+      @mute
+    end
+
+    # Sets the output padding, not allowing less than zero values.
+    #
+    def padding=(value)
+      @padding = [0, value].max
+    end          
+          
     # Asks something to the user and receives a response.
     #
     # If asked to limit the correct responses, you can pass in an
@@ -82,6 +109,22 @@ module Peony
 
       def stderr
         $stderr
+      end
+      
+      def ask_simply(statement, color=nil)
+        say("#{statement} ", color)
+        stdin.gets.tap{|text| text.strip! if text}
+      end
+
+      def ask_filtered(statement, answer_set, *args)
+        correct_answer = nil
+        until correct_answer
+          answer = ask_simply("#{statement} #{answer_set.inspect}", *args)
+          correct_answer = answer_set.include?(answer) ? answer : nil
+          answers = answer_set.map(&:inspect).join(", ")
+          say("Your response must be one of: [#{answers}]. Please try again.") unless correct_answer
+        end
+        correct_answer
       end
     
   end
