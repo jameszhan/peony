@@ -23,9 +23,7 @@ module Peony
     
     def mkdir_p(*dirs)
       dirs.each do|dir|
-        if !FileTest.exists?(dir)
-          FileUtils.mkdir_p(dir)
-        end
+        FileUtils.mkdir_p(dir) if !FileTest.exists?(dir) 
         fail "#{dir} must be a directory!" unless FileTest.directory?(dir)
       end
     end

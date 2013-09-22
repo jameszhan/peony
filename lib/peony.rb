@@ -1,3 +1,4 @@
+require 'rake'
 require "peony/version"
 require "peony/application"
 
