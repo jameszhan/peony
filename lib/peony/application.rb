@@ -1,3 +1,5 @@
+require 'rake'
+
 module Rake
   class Application
     alias_method :origin_find_rakefile_location, :find_rakefile_location
