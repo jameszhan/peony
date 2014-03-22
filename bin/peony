@@ -25,15 +25,15 @@ Rake.application.instance_eval do
     
     init 'peony'
     
-    @rakefiles += ['Peonyfile', 'peonyfile']
-    options.rakelib += ["recipes/**"]    
+    @rakefiles += %w{Peonyfile peonyfile}
+    options.rakelib += %w{recipes/**}
     
     # Load the Peony DSL.
     require 'peony/rake'
     
     load_rakefile
     
-    Dir.glob(File.expand_path("../recipes/**/*.rake", __dir__)) do|fn|
+    Dir.glob(File.expand_path('../recipes/**/*.rake', __dir__)) do|fn|
       load fn
     end
     

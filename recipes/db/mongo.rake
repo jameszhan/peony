@@ -1,13 +1,13 @@
-set_default :mongod, "/usr/local/bin/mongod"
+set_default :mongod, '/usr/local/bin/mongod'
 
-set_default :mongo_master_name, "master"
-set_default :mongo_slave_name, "slave"
+set_default :mongo_master_name, 'master'
+set_default :mongo_slave_name,  'slave'
 
-set_default :mongo_master_dir, ->{"#{data_dir}/mongo/#{mongo_master_name}"}
-set_default :mongo_slave_dir, ->{"#{data_dir}/mongo/#{mongo_slave_name}"}
-set_default :mongo_etc_dir, ->{"#{etc_dir}/mongo"}
-set_default :mongo_log_dir, ->{"#{log_dir}/mongo"}
-set_default :mongo_run_dir, ->{"#{run_dir}/mongo"}
+set_default :mongo_master_dir,  ->{ "#{data_dir}/mongo/#{mongo_master_name}" }
+set_default :mongo_slave_dir,   ->{ "#{data_dir}/mongo/#{mongo_slave_name}" }
+set_default :mongo_etc_dir,   ->{ "#{etc_dir}/mongo" }
+set_default :mongo_log_dir,   ->{ "#{log_dir}/mongo" }
+set_default :mongo_run_dir,   ->{ "#{run_dir}/mongo" }
 
 
 set_default :mongo_fork , true
@@ -15,26 +15,26 @@ set_default :mongo_jsonp, true
 set_default :mongo_rest , true
 
 set_default :mongo_master_port, 27017
-set_default :mongo_slave_port, 27018
-set_default :mongo_slave_source, ->{"127.0.0.1:#{mongo_master_port}"}
+set_default :mongo_slave_port,  27018
+set_default :mongo_slave_source,  ->{ "127.0.0.1:#{mongo_master_port}" }
                                                        
-set_default :mongo_master_conf, ->{"#{mongo_etc_dir}/#{mongo_master_name}.conf"}
-set_default :mongo_slave_conf, ->{"#{mongo_etc_dir}/#{mongo_slave_name}.conf"}
+set_default :mongo_master_conf,   ->{ "#{mongo_etc_dir}/#{mongo_master_name}.conf" }
+set_default :mongo_slave_conf,    ->{ "#{mongo_etc_dir}/#{mongo_slave_name}.conf" }
 
-set_default :mongo_master_start, ->{"#{mongod} --config #{mongo_master_conf}"}
-set_default :mongo_slave_start, ->{"#{mongod} --config #{mongo_slave_conf}"}
-set_default :mongo_master_stop, ->{"kill -2 `cat #{mongo_run_dir}/#{mongo_master_name}.pid`"}
-set_default :mongo_slave_stop, ->{"kill -2 `cat #{mongo_run_dir}/#{mongo_slave_name}.pid`"}
+set_default :mongo_master_start,  ->{ "#{mongod} --config #{mongo_master_conf}" }
+set_default :mongo_slave_start,   ->{ "#{mongod} --config #{mongo_slave_conf}" }
+set_default :mongo_master_stop,   ->{ "kill -2 `cat #{mongo_run_dir}/#{mongo_master_name}.pid`" }
+set_default :mongo_slave_stop,    ->{ "kill -2 `cat #{mongo_run_dir}/#{mongo_slave_name}.pid`" }
 
 
 namespace :db do  
   namespace :mongo do
     
-    desc "Create the directory for mongodb, and copy mongo config file to etc directory."
+    desc 'Create the directory for mongodb, and copy mongo config file to etc directory.'
     task :init do
       mkdir_p(mongo_master_dir, mongo_slave_dir, mongo_etc_dir, mongo_log_dir, mongo_run_dir)
-      template("mongo/master.conf.erb", mongo_master_conf, true)
-      template("mongo/slave.conf.erb", mongo_slave_conf, true)
+      template('mongo/master.conf.erb', mongo_master_conf, true)
+      template('mongo/slave.conf.erb', mongo_slave_conf, true)
     end
     
     [:master, :slave].each do|ns|
@@ -48,12 +48,12 @@ namespace :db do
       end
     end
     
-    desc "Start the master mongodb instance"
-    task :start => "master:start" do
+    desc 'Start the master mongodb instance'
+    task :start => 'master:start' do
     end
     
-    desc "Stop the master mongodb instance"
-    task :stop => "master:stop" do
+    desc 'Stop the master mongodb instance'
+    task :stop => 'master:stop' do
     end
   end
 end

@@ -11,7 +11,7 @@ describe Peony::Settings do
     end
     
     it 'setting proc should work' do
-      @settings.email = ->{"zhiqiangzhan@gmail.com"}
+      @settings.email = ->{ 'zhiqiangzhan@gmail.com' }
       @settings.email.should == 'zhiqiangzhan@gmail.com'
     end
     
@@ -20,11 +20,11 @@ describe Peony::Settings do
       @settings.version = '3'
 
       @settings.path?.should be_true
-      @settings.path.should == "/var/www/3"
+      @settings.path.should == '/var/www/3'
     end
     
     it 'setting block should work' do
-      @settings.send(:email=){"zhiqiangzhan@gmail.com"}
+      @settings.send(:email=){ 'zhiqiangzhan@gmail.com' }
       @settings.email.should == 'zhiqiangzhan@gmail.com'
     end
     

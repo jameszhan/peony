@@ -68,7 +68,7 @@ module Peony
     # Returns the output string of the ERB template.
     def erb(file, b=binding)
       require 'erb'
-      ERB.new(File.read(file), nil, "-").result(b)
+      ERB.new(File.read(file), nil, '-').result(b)
     end
 
     # ### report_time
@@ -84,7 +84,7 @@ module Peony
     #     # Elapsed time: 2.00 seconds
     def report_time(&blk)
       time, output = measure &blk
-      print_str "Elapsed time: %.2f seconds" % [time]
+      print_str 'Elapsed time: %.2f seconds' % [time]
       output
     end
 
@@ -117,7 +117,7 @@ module Peony
     def echo_cmd(str)
       if verbose_mode?
         require 'shellwords'
-        "echo #{Shellwords.escape("$ " + str)} &&\n#{str}"
+        "echo #{Shellwords.escape('$ ' + str)} &&\n#{str}"
       else
         str
       end
@@ -163,7 +163,7 @@ module Peony
     end    
     
     def search_paths
-      ["#{Dir.pwd}/templates", File.expand_path("../../templates", __dir__)]
+      ["#{Dir.pwd}/templates", File.expand_path('../../templates', __dir__)]
     end    
     
     def find_templates(name, file_only=true)

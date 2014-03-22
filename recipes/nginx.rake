@@ -40,7 +40,7 @@ end
 namespace :nginx do
   desc "Initialize nginx directory and create it's config files."
   task :init do
-    mkdir_p(nginx_etc_dir, nginx_run_dir, nginx_prefix)
+    mkdir_p(nginx_etc_dir, nginx_run_dir, nginx_prefix, nginx_log_dir)
     unless File.exists?("#{nginx_etc_dir}/conf")
       FileUtils.cp_r(find_templates("nginx/conf", false).first, nginx_etc_dir)
     end

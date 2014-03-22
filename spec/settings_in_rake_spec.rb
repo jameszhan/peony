@@ -24,14 +24,14 @@ describe 'Settings in rake tasks' do
       set :path, lambda { "/var/www/#{version}" }
     }
 
-    rake.path.should == "/var/www/42"
-    rake.path?.should be_true
+    rake.path.should == '/var/www/42'
+    rake.settings.path?.should be_true
   end
 
   it '#settings with a bang should work' do
     expect {
       rake {
-        set :path, lambda { "/var/www/#{version!}" }
+        set :path, lambda { "/var/www/#{settings.version!}" }
       }
       rake.path
     }.to raise_error(Peony::Error, /version/)

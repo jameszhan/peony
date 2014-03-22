@@ -6,7 +6,7 @@ module Peony
         
     module ClassMethods
       def source_paths
-        ["#{Dir.pwd}/templates", File.expand_path("../../templates", __dir__)]
+        ["#{Dir.pwd}/templates", File.expand_path('../../templates', __dir__)]
       end    
     end
     

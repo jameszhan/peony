@@ -11,7 +11,6 @@ require 'bundler/setup'
 require 'rake'
 require 'peony'
 
-
 class RakeScope
   include Rake::DSL  if Rake.const_defined?(:DSL)
   include Peony::Utils
@@ -22,7 +21,6 @@ def rake(&blk)
     @scope ||= RakeScope.new
     @scope.instance_eval &blk
   end
-
   @scope
 end
 

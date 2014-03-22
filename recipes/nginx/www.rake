@@ -4,11 +4,11 @@ set_default :www_paths, {}
 
 namespace :nginx do
   namespace :www do
-    desc "Create www config files."
+    desc 'Create www config files.'
     task :init do
-      template("nginx/www.conf.erb", "#{nginx_etc_dir}/www.conf", true)
-      template("nginx/sites-enabled/static.conf.erb", "#{nginx_etc_dir}/sites-enabled/static.http.conf", true) unless www_paths.empty?
-      template("nginx/sites-enabled/php.conf.erb", "#{nginx_etc_dir}/sites-enabled/php.http.conf", true)
+      template('nginx/www.conf.erb', "#{nginx_etc_dir}/www.conf", true)
+      template('nginx/sites-enabled/static.conf.erb', "#{nginx_etc_dir}/sites-enabled/static.http.conf", true) unless www_paths.empty?
+      template('nginx/sites-enabled/php.conf.erb', "#{nginx_etc_dir}/sites-enabled/php.http.conf", true)
     end
     
     [:start, :stop, :reload].each do|t|
@@ -18,7 +18,7 @@ namespace :nginx do
       end
     end
     
-    desc "Restart nginx www instance."
+    desc 'Restart nginx www instance.'
     task :restart do
       nginx_restart(:www)
     end
