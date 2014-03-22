@@ -19,7 +19,7 @@ namespace :db do
     desc 'Execute postgres initdb.'
     task :init do
       if File.exists?("#{pg_data_dir}/postgresql.conf")
-        puts 'Postgresql database has already initialized.'
+        say 'Postgresql database has already initialized.', :magenta, true
       else
         run pg_init
       end

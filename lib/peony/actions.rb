@@ -20,6 +20,7 @@ module Peony
 
     def mkdir_p(*dirs)
       dirs.each do|dir|
+        say "mkdir #{dir}", :yellow, true
         FileUtils.mkdir_p(dir) if !FileTest.exists?(dir)
         fail "#{dir} must be a directory!" unless FileTest.directory?(dir)
       end
