@@ -12,7 +12,7 @@ if ARGV.delete('--help') || ARGV.delete('-h')
 end
 
 if ARGV.delete('--version') || ARGV.delete('-V')
-  puts "Peony, version v#{Peony::Version}"
+  puts "Peony, version v#{Peony::VERSION}"
   exit
 end
 
