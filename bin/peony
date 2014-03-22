@@ -20,6 +20,10 @@ if ARGV.delete('--simulate') || ARGV.delete('-S')
   ENV['simulate'] = '1'
 end
 
+if ARGV.delete('--dry-run') || ARGV.delete('-D')
+  ENV['dry-run'] = '1'
+end
+
 Rake.application.instance_eval do
   standard_exception_handling do
     

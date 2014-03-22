@@ -1,17 +1,17 @@
-set_default :nginx, ->{"/usr/local/bin/nginx"}
-set_default :nginx_home,    ->{`brew --prefix nginx`.strip}
-set_default :nginx_etc_dir, ->{"#{etc_dir}/nginx"}
-set_default :nginx_run_dir, ->{"#{run_dir}/nginx"}
-set_default :nginx_prefix, ->{"#{log_dir}/nginx"}
+set_default :nginx,         ->{ '/usr/local/bin/nginx' }
+set_default :nginx_home,    ->{ `brew --prefix nginx`.strip }
+set_default :nginx_etc_dir, ->{ "#{etc_dir}/nginx" }
+set_default :nginx_run_dir, ->{ "#{run_dir}/nginx" }
+set_default :nginx_prefix,  ->{ "#{log_dir}/nginx" }
 
 set_default :worker_processes, 8
             
 set_default :upstreams, [
-  {name: :fastcgi_server, servers: ["127.0.0.1:6666"]}, 
-  {name: :catalina_server, servers: ["127.0.0.1:8080"]}
+  {name: :fastcgi_server, servers: ['127.0.0.1:6666']},
+  {name: :catalina_server, servers: ['127.0.0.1:8080']}
 ]
 
-set_default :server_name, "localhost"
+set_default :server_name, 'localhost'
 
 set_default :use_ssl, false
 set_default :ssl_certificate,	    ->{"#{etc_dir}/ssl/server.crt"}	  
@@ -32,7 +32,7 @@ end
 
 def nginx_restart(name)
   invoke "nginx:#{name}:stop"
-  puts "Start nginx......"
+  puts 'Start nginx......'
   sleep 5
   invoke "nginx:#{name}:start"
 end

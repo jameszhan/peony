@@ -15,8 +15,8 @@ namespace :elasticsearch do
   desc "Initialize elasticsearch directory and copy it's config files to etc path."
   task :init do  
     mkdir_p("#{etc_dir}/elasticsearch")
-    template("elasticsearch/config.yml.erb", es_config)
-    template("elasticsearch/logging.yml.erb", "#{etc_dir}/elasticsearch/logging.yml")
+    template('elasticsearch/config.yml.erb', es_config)
+    template('elasticsearch/logging.yml.erb', "#{etc_dir}/elasticsearch/logging.yml")
   end
   
   [:start, :stop, :shutdown].each do|cmd|

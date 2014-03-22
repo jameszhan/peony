@@ -8,14 +8,14 @@ set_default :log_dir,   ->{ "#{var_dir}/log" }
 set_default :www_dir,   ->{ "#{var_dir}/www" }
 set_default :data_dir,  ->{ "#{var_dir}/data" }
 
-set_default :user, 'james'
+set_default :user,  'james'
 set_default :group, 'admin'
 
 namespace :settings do
   desc 'List all the settings.'
   task :list do
     settings.each do|k, v|
-      puts "#{k} = #{settings.send(k)}"
+      say "#{k} = #{settings.send(k)}", :green, true
     end
   end
 end

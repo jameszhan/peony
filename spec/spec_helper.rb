@@ -11,14 +11,16 @@ require 'bundler/setup'
 require 'rake'
 require 'peony'
 
-class RakeScope
+class PeonyScope
   include Rake::DSL  if Rake.const_defined?(:DSL)
   include Peony::Utils
+  include Peony::Shell
+  include Peony::Actions
 end
 
-def rake(&blk)
+def peony(&blk)
   if block_given?
-    @scope ||= RakeScope.new
+    @scope ||= PeonyScope.new
     @scope.instance_eval &blk
   end
   @scope
