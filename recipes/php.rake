@@ -1,7 +1,7 @@
-set_default :php_home, ->{"#{share_dir}/php5"}
-set_default :php_cgi, ->{"#{php_home}/bin/php-cgi"}
-set_default :spawn_fcgi, "/usr/local/bin/spawn-fcgi"
-set_default :fcgi_run_dir, ->{"#{run_dir}/fcgi"}
+set_default :php_home,    ->{ "#{share_dir}/php5" }
+set_default :php_cgi,     ->{ "#{php_home}/bin/php-cgi" }
+set_default :spawn_fcgi, '/usr/local/bin/spawn-fcgi'
+set_default :fcgi_run_dir, ->{ "#{run_dir}/fcgi" }
 
 namespace :php do
   namespace :fcgi do
