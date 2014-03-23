@@ -9,6 +9,7 @@ module Peony
   autoload :Shell,      'peony/shell'
   autoload :Actions,    'peony/actions'
   autoload :LineEditor, 'peony/line_editor'
+  autoload :Scope,      'peony/scope'
   autoload :Settings,   'peony/settings'
   
   Error = Class.new(Exception)

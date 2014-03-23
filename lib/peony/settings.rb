@@ -1,5 +1,6 @@
 module Peony
   class Settings < Hash
+
     def method_missing(method, *args, &block)
       name = method.to_s
       key, punct = name[0..-2].to_sym, name[-1..-1]
