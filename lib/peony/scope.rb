@@ -24,7 +24,7 @@ module Peony
 
     def remove(key, recursively = false)
       delete(key)
-      if (recursively && @parent)
+      if recursively && @parent
         @parent.remove(key, recursively)
       end
       self
