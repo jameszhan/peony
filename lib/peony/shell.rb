@@ -1,8 +1,7 @@
 module Peony
   module Shell
     SHELL_DELEGATED_METHODS = [:ask, :error, :set_color, :yes?, :no?, :say, :say_status, :print_in_columns,
-                               :print_table, :print_wrapped, :file_collision, :terminal_width, :padding,
-                               :padding_to, :padding_up, :padding_down]
+                               :print_table, :print_wrapped, :file_collision, :terminal_width, :padding]
 
     # The following classes's code was copied from Thor, available under MIT-LICENSE
     # Copyright (c) 2008 Yehuda Katz, Eric Hodel, et al.
@@ -34,10 +33,10 @@ module Peony
 
     # Yields the given block with padding.
     def with_padding
-      shell.padding_up
+      shell.padding.up
       yield
     ensure
-      shell.padding_down
+      shell.padding.down
     end
 
   end

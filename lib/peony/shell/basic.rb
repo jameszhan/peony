@@ -10,7 +10,7 @@ module Peony
       # Initialize base, mute and padding to nil.
       #
       def initialize #:nodoc:
-        @base, @mute, @padding, @always_force = nil, false, 0, false
+        @base, @mute, @padding, @always_force = nil, false, Padding.new, false
       end
 
       # Mute everything that's inside given block
@@ -26,20 +26,6 @@ module Peony
       #
       def mute? # rubocop:disable TrivialAccessors
         @mute
-      end
-
-      # Sets the output padding, not allowing less than zero values.
-      #
-      def padding_to(value)
-        @padding = [0, value].max
-      end
-
-      def padding_up
-        @padding += 1
-      end
-
-      def padding_down
-        @padding += 1
       end
 
       # Asks something to the user and receives a response.
@@ -99,7 +85,7 @@ module Peony
       #
       def say_status(status, message, log_status = true)
         return if quiet? || log_status == false
-        spaces = '  ' * (padding + 1)
+        spaces = '  ' * (padding.value + 1)
         color  = log_status.is_a?(Symbol) ? log_status : :green
 
         status = status.to_s.rjust(12)
@@ -299,7 +285,7 @@ module Peony
       protected
 
       def prepare_message(message, *color)
-        spaces = '  ' * padding
+        spaces = '  ' * padding.value
         spaces + set_color(message.to_s, *color)
       end
 
@@ -423,6 +409,22 @@ module Peony
           say("Your response must be one of: [#{answers}]. Please try again.") unless correct_answer
         end
         correct_answer
+      end
+    end
+
+    class Padding
+      attr_accessor :value
+
+      def initialize
+        @value = 0
+      end
+
+      def up
+        @value += 1
+      end
+
+      def down
+        @value -= 1
       end
     end
   end

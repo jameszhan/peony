@@ -25,6 +25,9 @@ describe Peony do
     it 'should can run command' do
       peony do
         run "echo 'Hello World!'"
+        with_padding do
+          run "echo 'Hello World!'"
+        end
         run 'ls -l'
 
         inside 'lib/peony' do

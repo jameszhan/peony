@@ -88,7 +88,7 @@ module Peony
       dry_run = ENV['dry-run']
 
       say_status :inside, dir, verbose
-      self.padding_up if verbose
+      self.padding.up if verbose
       @destination_stack.push File.expand_path(dir, destination_root)
 
       # If the directory doesnt exist and we're not pretending
@@ -104,7 +104,7 @@ module Peony
       end
 
       @destination_stack.pop
-      self.padding_down if verbose
+      self.padding.down if verbose
     end
 
 
@@ -132,7 +132,7 @@ module Peony
       path    = find_recipes(path).first unless is_uri
 
       say_status :apply, path, verbose
-      self.padding_up if verbose
+      self.padding.up if verbose
 
       if is_uri
         contents = open(path, 'Accept' => 'application/x-peony-template') {|io| io.read }
@@ -141,7 +141,7 @@ module Peony
       end
 
       instance_eval(contents, path)
-      self.padding_down if verbose
+      self.padding.down if verbose
     end
     
     # Executes a command returning the contents of the command.
