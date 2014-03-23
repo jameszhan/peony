@@ -1,21 +1,34 @@
 module Peony
   class Scope < Hash
-    def initialize(parent = nil)
-      @parent = parent
+    class << self
+      def scopes
+        @scopes ||= Hash.new
+      end
     end
 
-    alias_method :local?, :key?
+    attr_reader :name
+
+    def initialize(name = nil, parent = nil)
+      @name = name
+      @parent = parent
+      self.class.scopes[name] = self
+      yield name, self if block_given?
+    end
+
+    alias_method :local?, :has_key?
 
     def [](key)
       super(key) || (@parent && @parent[key])
     end
 
-    def key?(key)
+    ## also change the method key?, include?
+    #
+    def has_key?(key)
       local?(key) || (!@parent.nil? && @parent.key?(key))
     end
 
     def []=(key, value)
-      if !local?(key) && @parent && @parent.key?(key)
+      if !local?(key) && @parent && @parent.has_key?(key)
         @parent.set key, value
       else
         store(key, value)
@@ -30,8 +43,10 @@ module Peony
       self
     end
 
-    alias_method :set, :[]=
-    alias_method :local, :store
+    alias_method :set,      :[]=
+    alias_method :local,    :store
+    alias_method :include?, :has_key?
+    alias_method :key?,     :has_key?
 
   end
 end

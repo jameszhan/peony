@@ -73,6 +73,23 @@ module Peony
       @settings ||= Settings.new
     end
 
+    def scope(name = :root)
+      name = "root.#{name}".to_sym unless name == :root
+      _scope = scopes[name]
+      _scope = Scope.new(name, "#{settings.current_scope}.#{name}".to_sym) unless _scope
+      original_scope = settings.current_scope
+      begin
+        settings.current_scope = _scope
+        yield
+      ensure
+        settings.current_scope = original_scope
+      end
+    end
+
+    def scopes
+      Peony.scopes
+    end
+
     def template_paths
       ["#{Dir.pwd}/templates", File.expand_path('../../templates', __dir__)]
     end

@@ -36,4 +36,5 @@ describe 'Settings in rake tasks' do
       peony.path
     }.to raise_error(Peony::Error, /version/)
   end
+
 end
