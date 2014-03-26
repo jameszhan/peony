@@ -14,8 +14,15 @@ set_default :group, 'admin'
 namespace :settings do
   desc 'List all the settings.'
   task :list do
-    settings.each do|k, v|
-      say "#{k} = #{settings.send(k)}", :green, true
+    settings.scopes.each do|name, scope|
+      say "scope: #{name}", :yellow
+        settings.with(scope) do
+          scope.each do|k, _|
+            with_padding do
+              say "#{k} = #{settings.send(k)}", :green, true
+            end
+          end
+        end
     end
   end
 end

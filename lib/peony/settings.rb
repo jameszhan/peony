@@ -1,66 +1,32 @@
 module Peony
   class Settings
-    attr_reader :root_scope
+    attr_reader :current_scope, :root_scope
 
     def initialize
-      @root_scope = Scope.new(:root)
+      @current_scope = @root_scope = Scope.new(:root)
     end
 
-    def current_scope
-      @current_scope ||= @root_scope
-    end
-
-    def include?(key)
-      current_scope.include? key
+    def with_scope(name)
+      original_scope = current_scope
+      begin
+        @current_scope = original_scope.new_scope(name)
+        yield
+      ensure
+        @current_scope = original_scope
+      end
     end
 
     def method_missing(method, *args, &block)
-      name = method.to_s
-      key, punct = name[0..-2].to_sym, name[-1..-1]
-      case punct
-      when '='
-        current_scope[key] = args.first != nil ? args.first : block
-      when '?'
-        current_scope.include? key
-      when '!'
-        raise Error, "Setting :#{key} is not set" unless current_scope.include?(key)
-        evaluate current_scope[key]
+      if current_scope.respond_to?(method, false)
+        current_scope.__send__(method, *args, &block)
       else
-        if current_scope.include? method
-          evaluate current_scope[method]
-        else
-          block.call unless block.nil? 
-        end
+        super
       end
     end
 
-    def method_missing1(method, *args, &block)
-      name = method.to_s
-      key, punct = name[0..-2].to_sym, name[-1..-1]
-      case punct
-        when '='
-          self[key] = args.first != nil ? args.first : block
-        when '?'
-          include? key
-        when '!'
-          raise Error, "Setting :#{key} is not set" unless include?(key)
-          evaluate self[key]
-        else
-          if include? method
-            evaluate self[method]
-          else
-            block.call unless block.nil?
-          end
-      end
+    def respond_to_missing?(method, include_all = true)
+      current_scope.respond_to?(method, include_all)
     end
 
-
-    def evaluate(value)
-      if value.is_a?(Proc)
-        value.call
-      else
-        value
-      end
-    end
   end
 end

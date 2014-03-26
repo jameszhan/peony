@@ -1,17 +1,10 @@
 module Peony
   class Scope < Hash
-    class << self
-      def scopes
-        @scopes ||= Hash.new
-      end
-    end
-
     attr_reader :name
 
     def initialize(name = nil, parent = nil)
       @name = name
       @parent = parent
-      self.class.scopes[name] = self
       yield name, self if block_given?
     end
 
@@ -21,7 +14,7 @@ module Peony
       super(key) || (@parent && @parent[key])
     end
 
-    ## also change the method key?, include?
+    ## also change the method key?, include?, member?
     #
     def has_key?(key)
       local?(key) || (!@parent.nil? && @parent.key?(key))
@@ -43,10 +36,47 @@ module Peony
       self
     end
 
+    def respond_to_missing?(method, _ = true)
+      self.include?(method) || method.to_s =~ /[a-z]\w*[?=!]?$/
+    end
+
+    def evaluate(value)
+      ret = value.is_a?(Proc) ? value.call : value
+      ret.nil? && block_given? ? yield : ret
+    end
+
     alias_method :set,      :[]=
     alias_method :local,    :store
+
     alias_method :include?, :has_key?
     alias_method :key?,     :has_key?
+    alias_method :member?,  :has_key?
+
+
+    def method_missing(method, *args, &block)
+      return evaluate(self.[](method), &block) if has_key?(method)
+      match = method.to_s.match(/(.*?)([?=!]?)$/)
+      case match[2]
+        when '='
+          #self[match[1].to_sym] = args.first || block
+          local(match[1].to_sym, args.first || block)
+        when '?'
+          !!self[match[1].to_sym]
+        when '!'
+          evaluate(fetch(match[1].to_sym), &block)  #just fetch local key
+        else
+          evaluate(self[match[1]], &block)          #support string key
+      end
+    end
+
+    def new_scope(name)
+      clazz = self.class
+      Scope.new(name, current_scope) do|_name, _scope|
+        clazz.send :define_method, _name do
+          _scope
+        end
+      end
+    end
 
   end
 end

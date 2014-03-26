@@ -46,7 +46,7 @@ describe Peony::Settings do
     end
     
     it 'question mark should work with nils' do
-      @settings.deploy_to = nil
+      @settings.deploy_to = '/var/www'
       @settings.deploy_to?.should be_true
       @settings.foobar?.should be_false
     end
@@ -63,7 +63,7 @@ describe Peony::Settings do
     end
     
     it 'bangs should check for settings' do
-      expect { @settings.non_existent_setting! }.to raise_error(Peony::Error, /non_existent_setting/)
+      expect { @settings.non_existent_setting! }.to raise_error(KeyError, /non_existent_setting/)
     end
 
     it 'bangs should return settings' do

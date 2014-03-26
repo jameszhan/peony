@@ -42,7 +42,7 @@ module Peony
     #
     #     set :domain, 'kickflip.me'
     def set(key, *args, &block)
-      settings.send :"#{key}=", *args, block
+      settings.send :"#{key}=", *args, &block
     end
 
     # ### set_default
@@ -73,21 +73,10 @@ module Peony
       @settings ||= Settings.new
     end
 
-    def scope(name = :root)
-      name = "root.#{name}".to_sym unless name == :root
-      _scope = scopes[name]
-      _scope = Scope.new(name, "#{settings.current_scope}.#{name}".to_sym) unless _scope
-      original_scope = settings.current_scope
-      begin
-        settings.current_scope = _scope
+    def scope(name)
+      settings.with_scope(name.to_sym) do
         yield
-      ensure
-        settings.current_scope = original_scope
       end
-    end
-
-    def scopes
-      Peony.scopes
     end
 
     def template_paths
@@ -109,7 +98,7 @@ module Peony
     def find_in_directories(paths, name, file_only)
       templates = []
       paths.each do|path|
-        templates += Dir[File.expand_path(name, path)].reject{|filename| file_only && File.directory?(filename) }
+        templates += Dir[File.expand_path(name, path)].reject{|filename| file_only && File.directory?(filename)}
       end
       templates
     end
@@ -120,9 +109,9 @@ module Peony
     # See #settings for an explanation.
     #
     # Returns things.
-    def method_missing(meth, *args, &blk)
-      if settings.include? meth 
-        settings.send meth, *args, &blk
+    def method_missing(method, *args, &blk)
+      if settings.respond_to? method, true
+        settings.__send__(method, *args, &blk)
       else
         super
       end

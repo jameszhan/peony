@@ -34,10 +34,15 @@ describe Peony do
       scope[:a].should == 8
       root_scope[:a].should == 2
 
+      scope.a.should == 8
+      root_scope.a.should == 2
+      scope.a?.should be_true
+
       scope.delete(:a)
       scope[:a] = 9
       scope[:a].should == 9
       root_scope[:a].should == 9
+
     end
   end
 end

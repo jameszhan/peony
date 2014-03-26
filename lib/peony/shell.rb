@@ -33,10 +33,10 @@ module Peony
 
     # Yields the given block with padding.
     def with_padding
-      shell.padding.up
+      self.padding.up
       yield
     ensure
-      shell.padding.down
+      self.padding.down
     end
 
   end
