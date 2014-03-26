@@ -9,7 +9,7 @@ module Peony
 
     def template(from, to, override=false)
       template = find_templates(from).first
-      raise "Can't find tempalte #{from} in directory #{search_paths}." unless template
+      raise "Can't find tempalte #{from} in directory #{template_paths}." unless template
       raise "File #{to} have already exists." if !override && File.exists?(to)
       say "copy #{template} to #{to}", :green
       open(to, "w+") do|out|
