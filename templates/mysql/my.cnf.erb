@@ -1,30 +1,30 @@
 [client] 
-character-set-server=<%= mysql_charset %>
-port=<%= mysql_port %>
-socket=<%= mysql_socket %>
+character-set-server=<%= mysql.charset %>
+port=<%= mysql.port %>
+socket=<%= mysql.socket %>
  
  
 [mysqld] 
-character-set-server=<%= mysql_charset %>
+character-set-server=<%= mysql.charset %>
 user=<%= user %>
-port=<%= mysql_port %>
-socket=<%= mysql_socket %>
-basedir=<%= mysql_home %>
-datadir=<%= mysql_dir %>
+port=<%= mysql.port %>
+socket=<%= mysql.socket %>
+basedir=<%= mysql.home %>
+datadir=<%= data_dir %>
 
-pid-file=<%= mysql_pid_file %>
-log-error=<%= mysql_log_dir %>/error.log
+pid-file=<%= mysql.pid_file %>
+log-error=<%= mysql.log_dir %>/error.log
 
-slow_query_log=<%= mysql_slow_query_log %>
-slow_query_log_file=<%= mysql_log_dir %>/slow-query.log
+slow_query_log=<%= mysql.slow_query_log %>
+slow_query_log_file=<%= mysql.log_dir %>/slow-query.log
 
-general_log=<%= mysql_general_log %>
-general_log_file=<%= mysql_log_dir %>/general.log
+general_log=<%= mysql.general_log %>
+general_log_file=<%= mysql.log_dir %>/general.log
 
  
-relay-log-index=<%= mysql_log_dir %>/relay-index.log 
-relay-log-info-file=<%= mysql_log_dir %>/relay-info.log 
-relay-log=<%= mysql_log_dir %>/relay.log
+relay-log-index=<%= mysql.log_dir %>/relay-index.log
+relay-log-info-file=<%= mysql.log_dir %>/relay-info.log
+relay-log=<%= mysql.log_dir %>/relay.log
 
 explicit_defaults_for_timestamp=TRUE
 

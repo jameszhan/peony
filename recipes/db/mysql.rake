@@ -1,47 +1,47 @@
-set_default :mysql_home,        `brew --prefix mysql`.strip
-set_default :mysqld,            '/usr/local/bin/mysqld_safe'
-set_default :mysqladmin,        '/usr/local/bin/mysqladmin'
-set_default :mysql_install_db,  '/usr/local/bin/mysql_install_db'
+scope :mysql do
+  set_default :home,              `brew --prefix mysql`.strip
+  set_default :mysqld,            '/usr/local/bin/mysqld_safe'
+  set_default :mysqladmin,        '/usr/local/bin/mysqladmin'
+  set_default :mysql_install_db,  '/usr/local/bin/mysql_install_db'
 
-set_default :mysql_dir,         ->{ "#{data_dir}/mysql/#{mysql_port}" }
-set_default :mysql_log_dir,     ->{ "#{log_dir}/mysql/#{mysql_port}" }
-set_default :mysql_conf,        ->{ "#{etc_dir}/my.cnf" }
+  set_default :data_dir,          ->{ "#{data_dir}/mysql/#{mysql_port}" }
+  set_default :log_dir,           ->{ "#{log_dir}/mysql/#{mysql_port}" }
+  set_default :config_file,       ->{ "#{etc_dir}/my.cnf" }
 
-set_default :mysql_user,        'root'
-set_default :mysql_password,    '123456'
+  set_default :user,              'root'
+  set_default :password,          '123456'
 
-set_default :mysql_pid_file,    ->{ "#{run_dir}/mysql/#{mysql_port}.pid" }
-set_default :mysql_port,        '3306'
-set_default :mysql_socket,      '/tmp/mysql.sock'
-set_default :mysql_charset,     'UTF8'
-set_default :mysql_general_log, 'ON'
-set_default :mysql_slow_query_log, 'ON'
+  set_default :pid_file,          ->{ "#{run_dir}/mysql/#{mysql.port}.pid" }
+  set_default :port,              '3306'
+  set_default :socket,            '/tmp/mysql.sock'
+  set_default :charset,           'UTF8'
+  set_default :general_log,       'ON'
+  set_default :slow_query_log,    'ON'
 
-set_default :mysql_start,       ->{ "#{mysqld}  --defaults-file=#{mysql_conf} --datadir=#{mysql_dir} --basedir=#{mysql_home} &" }
-set_default :mysql_stop,        ->{ "#{mysqladmin} --verbose --user=#{mysql_user} --password=#{mysql_password} shutdown" }
-set_default :mysql_status,      ->{ "#{mysqladmin} --verbose status variables" }
+  set_default :start,       ->{ "#{mysql.mysqld}  --defaults-file=#{mysql.config_file} --datadir=#{mysql.data_dir} --basedir=#{mysql.home} &" }
+  set_default :stop,        ->{ "#{mysql.mysqladmin} --verbose --user=#{mysql.user} --password=#{mysql.password} shutdown" }
+  set_default :status,      ->{ "#{mysql.mysqladmin} --verbose status variables" }
+end
 
 namespace :db do
-  
   namespace :mysql do
-    
     desc 'Create mysql directorys, config file and run mysql_install_db'
     task :init do
-      mkdir_p(mysql_dir, mysql_log_dir, "#{run_dir}/mysql/")
-      template('mysql/my.cnf.erb', mysql_conf, true)
-      run "#{mysql_install_db} --defaults-file=#{mysql_conf} --datadir=#{mysql_dir} --basedir=#{mysql_home}" if Dir["#{mysql_dir}/*"].empty?
+      mkdir_p(mysql.data_dir, mysql.log_dir, "#{run_dir}/mysql/")
+      template('mysql/my.cnf.erb', mysql.config_file, true)
+      run "#{mysql.mysql_install_db} --defaults-file=#{mysql.config_file} --datadir=#{mysql.data_dir} --basedir=#{mysql.home}" if Dir["#{mysql.data_dir}/*"].empty?
     end
     
     [:start, :stop, :status].each do|t|
       desc "#{t} mysql instance."
       task t do
-        run self.send("mysql_#{t}")
+        run mysql.send(t)
       end
     end
     
     desc 'Set mysql root user password.'
     task :set_root_pass do
-      run "mysqladmin --no-defaults --port=#{mysql_port} --user=root --protocol=tcp password '#{mysql_password}'"
+      run "#{mysql.mysqladmin} --no-defaults --port=#{mysql.port} --user=root --protocol=tcp password '#{mysql.password}'"
     end
     
     namespace :web do
