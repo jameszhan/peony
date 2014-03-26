@@ -36,8 +36,8 @@ Rake.application.instance_eval do
     require 'peony/rake'
     
     load_rakefile
-    
-    Dir.glob(File.expand_path('../recipes/**/*.rake', __dir__)) do|fn|
+
+    Dir.glob(File.expand_path('../recipes/**/*.rake', __dir__)).reverse.each do|fn|
       load fn
     end
     

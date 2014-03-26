@@ -86,6 +86,13 @@ describe 'Settings in rake tasks' do
     peony.scope1.scope2.x.should == 3
     peony.scope1.scope2.y.should == 3
     peony.scope1.scope2.z.should == 3
+
+    peony.scope1.e.should == 1
+    peony.scope1.f.should == 1
+    peony.scope1.g.should == 1
+    peony.scope1.scope2.u.should == 2
+    peony.scope1.scope2.v.should == 2
+    peony.scope1.scope2.w.should == 2
   end
 
 

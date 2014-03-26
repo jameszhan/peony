@@ -1,12 +1,12 @@
 location / {
-	root   				  <%= www_dir %>;
-	index  				  index.php index.html index.htm;
+	root   			<%= nginx.www_dir %>;
+	index  			index.php index.html index.htm;
 }
 
 location ~ \.php$ {
-	root				    <%= www_dir %>;
-	fastcgi_pass		fastcgi_server;
-	fastcgi_index		index.php;
-	fastcgi_param		SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
-	include				  conf/fastcgi_params;      
+	root			<%= nginx.www_dir %>;
+	fastcgi_pass	fastcgi_server;
+	fastcgi_index	index.php;
+	fastcgi_param	SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
+	include			conf/fastcgi_params;
 }

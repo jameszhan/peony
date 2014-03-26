@@ -59,7 +59,7 @@ module Peony
     #     set_default :term_mode, :pretty
     #     settings.term_mode.should == :system
     def set_default(key, *args, &block)
-      set(key, *args, block) unless settings.send(:"#{key}?")
+      set(key, *args, block) unless settings.send(:local?, key.to_sym)
     end
 
     # ### settings

@@ -1,91 +1,91 @@
 #user usergroup
-user <%= user %> <%= group %>;
+user    <%= user %> <%= group %>;
 
-worker_processes		<%= worker_processes %>;
+worker_processes            <%= nginx.worker_processes %>;
 
 #[debug, info, notice, warn, error, crit]
-error_log				  www_error.log  debug;
-pid						    <%= nginx_run_dir %>/www.pid;
+error_log                   www_error.log  debug;
+pid                         <%= nginx.run_dir %>/www.pid;
 
-worker_rlimit_nofile	8192;
+worker_rlimit_nofile        8192;
 
 #async IO event model.
 events {
-	worker_connections	8192;
+    worker_connections      8192;
 }
 
 http {
-	include				  conf/mime.types;	
-	default_type		application/octet-stream;
+    include                 conf/mime.types;
+    default_type            application/octet-stream;
 
-	log_format			main '$remote_addr – $remote_user [$time_local] $status '
-						      '"$request" $body_bytes_sent "$http_referer" ' 
-						      '"$http_user_agent" "$http_x_forwarded_for"';
+    log_format			    main '$remote_addr – $remote_user [$time_local] $status '
+                            '"$request" $body_bytes_sent "$http_referer" '
+                            '"$http_user_agent" "$http_x_forwarded_for"';
 
-	access_log			www_access.log main;
-	
-	server_names_hash_bucket_size	  128; 	
-	client_header_buffer_size		    32k;
-	large_client_header_buffers		  4 128k;
-	client_max_body_size			      32m;
-	client_body_buffer_size			    512k;  
-	
-	sendfile						    on;
-	tcp_nopush						  on;	
-	tcp_nodelay 					  on;
-	
-	keepalive_timeout				60;
-	
-	fastcgi_connect_timeout			  300;
-	fastcgi_send_timeout			    300;
-	fastcgi_read_timeout			    300;
-	fastcgi_buffer_size				    64k;
-	fastcgi_buffers					      4			64k;
-	fastcgi_busy_buffers_size		  128k;
-	fastcgi_temp_file_write_size	128k;
-	
-	gzip							            on;
-	gzip_min_length					      1k;
-	gzip_buffers					        4			16k;
-	gzip_http_version				      1.1;
-	gzip_comp_level					      2;
-	gzip_types						        text/plain	application/x-javascript	text/css	application/xml;
-	gzip_vary						          on;
-	
+    access_log              www_access.log main;
 
-<%- upstreams.each do|up| -%>
-  upstream <%= up[:name] %> {
-    <%- up[:servers].each do|config| -%>
-    server  <%= config %>;
+    server_names_hash_bucket_size       128;
+    client_header_buffer_size           32k;
+    large_client_header_buffers         4 128k;
+    client_max_body_size                32m;
+    client_body_buffer_size             512k;
+
+    sendfile                            on;
+    tcp_nopush                          on;
+    tcp_nodelay                         on;
+
+    keepalive_timeout                   60;
+
+    fastcgi_connect_timeout             300;
+    fastcgi_send_timeout                300;
+    fastcgi_read_timeout                300;
+    fastcgi_buffer_size                 64k;
+    fastcgi_buffers                     4            64k;
+    fastcgi_busy_buffers_size           128k;
+    fastcgi_temp_file_write_size        128k;
+
+    gzip                                on;
+    gzip_min_length                     1k;
+    gzip_buffers                        4            16k;
+    gzip_http_version                   1.1;
+    gzip_comp_level                     2;
+    gzip_types                          text/plain    application/x-javascript    text/css    application/xml;
+    gzip_vary                           on;
+
+
+    <%- nginx.upstreams.each do|up| -%>
+    upstream <%= up[:name] %> {
+        <%- up[:servers].each do|config| -%>
+        server  <%= config %>;
+        <%- end -%>
+    }
     <%- end -%>
-  }
-<%- end -%>
 
-	server {
-    listen							          <%= www_http_port %>;
-    server_name						        <%= server_name || "localhost" %>;
-    access_log						        http.access.log  main;
+    server {
+        listen                          <%= nginx.www_http_port %>;
+        server_name                     <%= nginx.server_name || "localhost" %>;
+        access_log                      http.access.log  main;
 
-    index							            index.html index.htm index.php;    
-    
-    include							          sites-enabled/*.http.conf;
-  }
+        index                           index.html index.htm index.php;
 
-<%- if use_ssl -%>
-	server {
-		listen							          <%= www_https_port %>;
-		server_name						        <%= server_name || "localhost" %>;
-    access_log						        https.access.log  main;
-    ssl 							            on;
-    ssl_certificate 			        <%= ssl_certificate %>;
-    ssl_certificate_key 	        <%= ssl_certificate_key %>;
-    ssl_session_timeout           5m;
-    ssl_protocols  				        SSLv2 SSLv3 TLSv1;
-    ssl_ciphers  					        ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
-    ssl_prefer_server_ciphers   	on;    
-    
-    include							          sites-enabled/*.https.conf;     	
-  }
-<%- end -%>		
+        include                         sites-enabled/*.http.conf;
+    }
+
+    <%- if nginx.use_ssl -%>
+    server {
+        listen                          <%= nginx.www_https_port %>;
+        server_name                     <%= nginx.server_name || "localhost" %>;
+        access_log                      https.access.log  main;
+        ssl                             on;
+        ssl_certificate                 <%= nginx.ssl_certificate %>;
+        ssl_certificate_key             <%= nginx.ssl_certificate_key %>;
+        ssl_session_timeout             5m;
+        ssl_protocols                   SSLv2 SSLv3 TLSv1;
+        ssl_ciphers                     ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+        ssl_prefer_server_ciphers       on;
+
+        include                         sites-enabled/*.https.conf;
+    }
+    <%- end -%>
 }
 

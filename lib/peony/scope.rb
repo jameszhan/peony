@@ -11,7 +11,7 @@ module Peony
     alias_method :local?, :has_key?
 
     def [](key)
-      super(key) || (@parent && @parent[key])
+      super || (@parent && @parent[key])
     end
 
     ## also change the method key?, include?, member?
@@ -40,11 +40,6 @@ module Peony
       self.include?(method) || method.to_s =~ /[a-z]\w*[?=!]?$/
     end
 
-    def evaluate(value)
-      ret = value.is_a?(Proc) ? value.call : value
-      ret.nil? && block_given? ? yield : ret
-    end
-
     alias_method :set,      :[]=
     alias_method :local,    :store
 
@@ -69,9 +64,14 @@ module Peony
       end
     end
 
+    def evaluate(value)
+      ret = value.is_a?(Proc) ? value.call : value
+      ret.nil? && block_given? ? yield : ret
+    end
+
     def new_scope(name)
       clazz = self.class
-      Scope.new(name, current_scope) do|_name, _scope|
+      self.send(name) || Scope.new(name, self) do|_name, _scope|
         clazz.send :define_method, _name do
           _scope
         end
