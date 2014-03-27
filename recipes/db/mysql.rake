@@ -1,12 +1,14 @@
 scope :mysql do
-  set_default :home,              `brew --prefix mysql`.strip
+  #set_default :home,              `brew --prefix mysql`.strip
+  set_default :home,              ->{ "#{etc_dir}/mysql" }
+  set_default :server,            '/usr/local/bin/mysql.server'
   set_default :mysqld,            '/usr/local/bin/mysqld_safe'
   set_default :mysqladmin,        '/usr/local/bin/mysqladmin'
   set_default :mysql_install_db,  '/usr/local/bin/mysql_install_db'
 
-  set_default :data_dir,          ->{ "#{data_dir}/mysql/#{mysql_port}" }
-  set_default :log_dir,           ->{ "#{log_dir}/mysql/#{mysql_port}" }
-  set_default :config_file,       ->{ "#{etc_dir}/my.cnf" }
+  set_default :data_dir,          ->{ "#{data_dir}/mysql/#{mysql.port}" }
+  set_default :log_dir,           ->{ "#{log_dir}/mysql/#{mysql.port}" }
+  set_default :config_file,       ->{ "#{mysql.home}/my.cnf" }
 
   set_default :user,              'root'
   set_default :password,          '123456'
@@ -18,27 +20,36 @@ scope :mysql do
   set_default :general_log,       'ON'
   set_default :slow_query_log,    'ON'
 
-  set_default :start,       ->{ "#{mysql.mysqld}  --defaults-file=#{mysql.config_file} --datadir=#{mysql.data_dir} --basedir=#{mysql.home} &" }
-  set_default :stop,        ->{ "#{mysql.mysqladmin} --verbose --user=#{mysql.user} --password=#{mysql.password} shutdown" }
-  set_default :status,      ->{ "#{mysql.mysqladmin} --verbose status variables" }
+  set_default :run_cmd,      ->{ ->(cmd){"#{mysql.server} #{cmd} --base_dir=#{mysql.home} --data_dir=#{mysql.data_dir} --pid-file=#{mysql.pid_file} --user=#{user}"} }
+
+  set_default :start,         ->{ "#{mysql.mysqld}  --defaults-file=#{mysql.config_file} --datadir=#{mysql.data_dir} --basedir=#{mysql.home} &" }
+  #set_default :stop,        ->{ "#{mysql.mysqladmin} --verbose --user=#{mysql.user} --password=#{mysql.password} shutdown" }
+  #set_default :status,      ->{ "#{mysql.mysqladmin} --verbose status variables" }
 end
 
 namespace :db do
   namespace :mysql do
     desc 'Create mysql directorys, config file and run mysql_install_db'
     task :init do
-      mkdir_p(mysql.data_dir, mysql.log_dir, "#{run_dir}/mysql/")
+      mkdir_p(mysql.home, mysql.data_dir, mysql.log_dir, "#{run_dir}/mysql/")
       template('mysql/my.cnf.erb', mysql.config_file, true)
       run "#{mysql.mysql_install_db} --defaults-file=#{mysql.config_file} --datadir=#{mysql.data_dir} --basedir=#{mysql.home}" if Dir["#{mysql.data_dir}/*"].empty?
     end
     
-    [:start, :stop, :status].each do|t|
+    [:start, :stop, :restart, :reload, :"force-reload", :status].each do|t|
+      desc "#{t} mysql instance."
+      task t do
+        run mysql.run_cmd.call(t)
+      end
+    end
+=begin
+    [:start].each do|t|
       desc "#{t} mysql instance."
       task t do
         run mysql.send(t)
       end
     end
-    
+=end
     desc 'Set mysql root user password.'
     task :set_root_pass do
       run "#{mysql.mysqladmin} --no-defaults --port=#{mysql.port} --user=root --protocol=tcp password '#{mysql.password}'"

@@ -14,15 +14,15 @@
 
 # By default Redis does not run as a daemon. Use 'yes' if you need it.
 # Note that Redis will write a pid file in /var/run/redis.pid when daemonized.
-daemonize <%= redis_daemonize %>
+daemonize <%= redis.daemonize %>
 
 # When running daemonized, Redis writes a pid file in /var/run/redis.pid by
 # default. You can specify a custom pid file location here.
-pidfile <%= redis_pid %>
+pidfile <%= redis.pid_file %>
 
 # Accept connections on the specified port, default is 6379.
 # If port 0 is specified Redis will not listen on a TCP socket.
-port <%= redis_port %>
+port <%= redis.port %>
 
 # If you want you can bind a single interface, if the bind option is not
 # specified all the interfaces will listen for incoming connections.
@@ -37,7 +37,7 @@ port <%= redis_port %>
 # unixsocketperm 755
 
 # Close the connection after a client is idle for N seconds (0 to disable)
-timeout <%= redis_timeout %>
+timeout <%= redis.timeout %>
 
 # Set server verbosity to 'debug'
 # it can be one of:
@@ -45,12 +45,12 @@ timeout <%= redis_timeout %>
 # verbose (many rarely useful info, but not a mess like the debug level)
 # notice (moderately verbose, what you want in production probably)
 # warning (only very important / critical messages are logged)
-loglevel <%= redis_loglevel %>
+loglevel <%= redis.loglevel %>
 
 # Specify the log file name. Also 'stdout' can be used to force
 # Redis to log on the standard output. Note that if you use standard
 # output for logging but daemonize, logs will be sent to /dev/null
-logfile <%= redis_logfile %>
+logfile <%= redis.logfile %>
 
 # To enable logging to the system logger, just set 'syslog-enabled' to yes,
 # and optionally update the other syslog parameters to suit your needs.
@@ -65,7 +65,7 @@ logfile <%= redis_logfile %>
 # Set the number of databases. The default database is DB 0, you can select
 # a different one on a per-connection basis using SELECT <dbid> where
 # dbid is a number between 0 and 'databases'-1
-databases <%= redis_databases %>
+databases <%= redis.databases %>
 
 ################################ SNAPSHOTTING  #################################
 #
@@ -112,7 +112,7 @@ stop-writes-on-bgsave-error yes
 # For default that's set to 'yes' as it's almost always a win.
 # If you want to save some CPU in the saving child set it to 'no' but
 # the dataset will likely be bigger if you have compressible values or keys.
-rdbcompression <%= rdbcompression %>
+rdbcompression <%= redis.rdbcompression %>
 
 # Since verison 5 of RDB a CRC64 checksum is placed at the end of the file.
 # This makes the format more resistant to corruption but there is a performance
@@ -121,10 +121,10 @@ rdbcompression <%= rdbcompression %>
 #
 # RDB files created with checksum disabled have a checksum of zero that will
 # tell the loading code to skip the check.
-rdbchecksum <%= rdbchecksum %>
+rdbchecksum <%= redis.rdbchecksum %>
 
 # The filename where to dump the DB
-dbfilename <%= redis_dbfilename %>
+dbfilename <%= redis.dbfilename %>
 
 # The working directory.
 #
@@ -135,7 +135,7 @@ dbfilename <%= redis_dbfilename %>
 # 
 # Note that you must specify a directory here, not a file name.
 #dir ./
-dir <%= redis_dir %>
+dir <%= redis.data_dir %>
 
 ################################# REPLICATION #################################
 
@@ -333,7 +333,7 @@ slave-priority 100
 # Please check http://redis.io/topics/persistence for more information.
 
 #appendonly no
-appendonly  <%= redis_appendonly %>
+appendonly  <%= redis.appendonly %>
 
 # The name of the append only file (default: "appendonly.aof")
 appendfilename appendonly.aof
@@ -557,7 +557,7 @@ zset-max-ziplist-value 64
 #
 # use "activerehashing yes" if you don't have such hard requirements but
 # want to free memory asap when possible.
-activerehashing <%= redis_activerehashing %>
+activerehashing <%= redis.activerehashing %>
 
 # The client output buffer limits can be used to force disconnection of clients
 # that are not reading data from the server fast enough for some reason (a
