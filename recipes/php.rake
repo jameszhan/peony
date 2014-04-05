@@ -3,6 +3,9 @@ scope :php do
   set_default :php_cgi,       ->{ "#{php.home}/bin/php-cgi" }
   set_default :spawn_fcgi,    '/usr/local/bin/spawn-fcgi'
   set_default :fcgi_run_dir,  ->{ "#{run_dir}/fcgi" }
+  set_default :fcgi_address,  '127.0.0.1'
+  set_default :fcgi_port,     6666
+  set_default :fcgi_children, 6
 end
 
 namespace :php do
@@ -14,7 +17,7 @@ namespace :php do
     
     desc 'Start fcgi.'
     task :start => :init do
-      run "#{php.spawn_fcgi} -a 127.0.0.1 -p 6666 -C 6 -f #{php.php_cgi} -u #{user} -P #{php.fcgi_run_dir}/spawn_fcgi.pid > /dev/null"
+      run "#{php.spawn_fcgi} -a #{php.fcgi_address} -p #{php.fcgi_port} -C #{php.fcgi_children} -f #{php.php_cgi} -u #{user} -d #{php.fcgi_run_dir} -P #{php.fcgi_run_dir}/spawn_fcgi.pid > /dev/null"
     end
     
     desc 'Kill fcgi.'

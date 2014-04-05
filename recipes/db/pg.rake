@@ -6,10 +6,10 @@ scope :pg do
   set_default :data_dir,    ->{ "#{data_dir}/pgsql" }
   set_default :run_cmd,     ->{ lambda{|cmd| "#{pg.pg_ctl} #{cmd} -D #{pg.data_dir} -l #{log_dir}/pgsql.log" }}
   set_default :init,        ->{ "#{pg.pg_ctl} -D #{pg.data_dir} --debug init" }
-  set_default :start,       ->{ "#{pg.pg_ctl} -D #{pg.data_dir} -l #{log_dir}/pgsql.log start" }
-  set_default :stop,        ->{ "#{pg.pg_ctl} -D #{pg.data_dir} stop" }
-  set_default :reload,      ->{ "#{pg.pg_ctl} -D #{pg.data_dir} reload" }
-  set_default :restart,     ->{ "#{pg.pg_ctl} -D #{pg.data_dir} -l #{log_dir}/pgsql.log restart" }
+  #set_default :start,       ->{ "#{pg.pg_ctl} -D #{pg.data_dir} -l #{log_dir}/pgsql.log start" }
+  #set_default :stop,        ->{ "#{pg.pg_ctl} -D #{pg.data_dir} stop" }
+  #set_default :reload,      ->{ "#{pg.pg_ctl} -D #{pg.data_dir} reload" }
+  #set_default :restart,     ->{ "#{pg.pg_ctl} -D #{pg.data_dir} -l #{log_dir}/pgsql.log restart" }
 
   set_default :super_users, {
       pgsql: '123456'

@@ -1,34 +1,47 @@
-[client] 
-character-set-server=<%= mysql.charset %>
-port=<%= mysql.port %>
-socket=<%= mysql.socket %>
- 
- 
-[mysqld] 
-character-set-server=<%= mysql.charset %>
-user=<%= user %>
-port=<%= mysql.port %>
-socket=<%= mysql.socket %>
-basedir=<%= mysql.home %>
-datadir=<%= mysql.data_dir %>
+# For advice on how to change settings please see
+# http://dev.mysql.com/doc/refman/5.6/en/server-configuration-defaults.html
 
-pid-file=<%= mysql.pid_file %>
-log-error=<%= mysql.log_dir %>/error.log
+[mysql]
+default-character-set = <%= mysql.charset %>
 
-slow_query_log=<%= mysql.slow_query_log %>
-slow_query_log_file=<%= mysql.log_dir %>/slow-query.log
+[mysqlshow]
+default-character-set = <%= mysql.charset %>
 
-general_log=<%= mysql.general_log %>
-general_log_file=<%= mysql.log_dir %>/general.log
+[mysqlimport]
+default-character-set = <%= mysql.charset %>
 
- 
-relay-log-index=<%= mysql.log_dir %>/relay-index.log
-relay-log-info-file=<%= mysql.log_dir %>/relay-info.log
-relay-log=<%= mysql.log_dir %>/relay.log
+[mysqlcheck]
+default-character-set = <%= mysql.charset %>
 
-explicit_defaults_for_timestamp=TRUE
+[mysql_upgrade]
+default-character-set = <%= mysql.charset %>
 
+[mysqld]
 
-[mysqldump] 
-quick 
-max_allowed_packet=24M
+# Remove leading # and set to the amount of RAM for the most important data
+# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+innodb_buffer_pool_size = 128M
+
+log-error = <%= mysql.log_error %>
+
+# Remove leading # to turn on a very important data integrity option: logging
+# changes to the binary log between backups.
+log_bin = mysqld-bin
+
+# These are commonly set, remove the # and set as required.
+basedir = <%= mysql.home %>
+datadir = <%= mysql.data_dir %>
+port = <%= mysql.port %>
+# server_id = .....
+socket = <%= mysql.socket %>
+
+# Remove leading # to set options mainly useful for reporting servers.
+# The server defaults are faster for transactions and fast SELECTs.
+# Adjust sizes as needed, experiment to find the optimal values.
+# join_buffer_size = 128M
+# sort_buffer_size = 2M
+# read_rnd_buffer_size = 2M
+
+character-set-server =      <%= mysql.charset %>
+
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES

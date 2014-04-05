@@ -1,9 +1,12 @@
 module Peony
   module Actions
 
-    def destination_root
+    def destination_stack
       @destination_stack ||= [File.expand_path(Dir.pwd || '')]
-      @destination_stack.last
+    end
+
+    def destination_root
+      destination_stack.last
     end
 
     # Returns the given path relative to the absolute root (ie, root where
@@ -11,7 +14,7 @@ module Peony
     #
     def relative_to_original_destination_root(path, remove_dot = true)
       path = path.dup
-      if path.gsub!(@destination_stack[0], '.')
+      if path.gsub!(destination_stack[0], '.')
         remove_dot ? (path[2..-1] || '') : path
       else
         path
@@ -24,6 +27,11 @@ module Peony
         FileUtils.mkdir_p(dir) if !FileTest.exists?(dir)
         fail "#{dir} must be a directory!" unless FileTest.directory?(dir)
       end
+    end
+
+    def touch(*files)
+      say "touch #{files}", :yellow, true
+      FileUtils.touch(files)
     end
 
     def sudo(cmd)
@@ -89,10 +97,10 @@ module Peony
 
       say_status :inside, dir, verbose
       self.padding.up if verbose
-      @destination_stack.push File.expand_path(dir, destination_root)
+      destination_stack.push File.expand_path(dir, destination_root)
 
       # If the directory doesnt exist and we're not pretending
-      if !File.exist?(destination_root) && !pretend
+      if !File.exist?(destination_root) && !dry_run
         FileUtils.mkdir_p(destination_root)
       end
 
@@ -103,7 +111,7 @@ module Peony
         FileUtils.cd(destination_root) { block.arity == 1 ? yield(destination_root) : yield }
       end
 
-      @destination_stack.pop
+      destination_stack.pop
       self.padding.down if verbose
     end
 
@@ -111,7 +119,7 @@ module Peony
     # Goes to the root and execute the given block.
     #
     def in_root
-      inside(@destination_stack.first) { yield }
+      inside(destination_stack.first) { yield }
     end
     
     # Loads an external file and execute it in the instance binding.
