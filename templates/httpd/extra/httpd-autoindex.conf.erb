@@ -17,9 +17,9 @@ IndexOptions FancyIndexing HTMLTable VersionSort
 # We include the /icons/ alias for FancyIndexed directory listings.  If
 # you do not use FancyIndexing, you may comment this out.
 #
-Alias /icons/ "<%= httpd_share_dir %>/icons/"
+Alias /icons/ "<%= httpd.share_dir %>/icons/"
 
-<Directory "<%= httpd_share_dir %>/icons">
+<Directory "<%= httpd.share_dir %>/icons">
     Options Indexes MultiViews
     AllowOverride None
     Order allow,deny

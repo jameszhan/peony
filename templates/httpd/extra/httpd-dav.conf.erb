@@ -12,11 +12,11 @@
 # on the directory where the DavLockDB is placed and on any directory where
 # "Dav On" is specified.
 
-DavLockDB "<%= webdav_dir %>/DavLock"
+DavLockDB "<%= httpd.webdav_dir %>/DavLock"
 
-Alias /webdav "<%= webdav_dir %>"
+Alias /webdav "<%= httpd.webdav_dir %>"
 
-<Directory "<%= webdav_dir %>">
+<Directory "<%= httpd.webdav_dir %>">
   Dav On
 	Options +Indexes
 	IndexOptions FancyIndexing
@@ -31,7 +31,7 @@ Alias /webdav "<%= webdav_dir %>"
 
     # You can use the htdigest program to create the password database:
     #   htdigest -c "/usr/user.passwd" DAV-upload admin
-    AuthUserFile "<%= auth_user_file %>"
+    AuthUserFile "<%= httpd.auth_user_file %>"
     AuthDigestProvider file
 	
     # Allow universal read-access, but writes are restricted

@@ -37,7 +37,7 @@ ServerRoot "/usr"
 # prevent Apache from glomming onto all bound IP addresses.
 #
 #Listen 12.34.56.78:80
-Listen <%= httpd_port %>
+Listen <%= httpd.port %>
 
 #
 # Dynamic Shared Object (DSO) Support
@@ -150,7 +150,7 @@ Group _www
 # e-mailed.  This address appears on some server-generated pages, such
 # as error documents.  e.g. admin@your-domain.com
 #
-ServerAdmin "<%= httpd_server_admin %>"
+ServerAdmin "<%= httpd.server_admin %>"
 
 #
 # ServerName gives the name and port that the server uses to identify itself.
@@ -159,7 +159,7 @@ ServerAdmin "<%= httpd_server_admin %>"
 #
 # If your host doesn't have a registered DNS name, enter its IP address here.
 #
-ServerName <%= httpd_server_name %>
+ServerName <%= httpd.server_name %>
 
 #
 # DocumentRoot: The directory out of which you will serve your
@@ -264,7 +264,7 @@ DocumentRoot "<%= www_dir %>"
 # logged here.  If you *do* define an error logfile for a <VirtualHost>
 # container, that host's errors will be logged there and not here.
 #
-ErrorLog "<%= httpd_log_dir %>/error.log"
+ErrorLog "<%= httpd.log_dir %>/error.log"
 
 #
 # LogLevel: Control the number of messages logged to the error_log.
@@ -293,7 +293,7 @@ LogLevel warn
     # define per-<VirtualHost> access logfiles, transactions will be
     # logged therein and *not* in this file.
     #
-    CustomLog "<%= httpd_log_dir %>/access.log" common
+    CustomLog "<%= httpd.log_dir %>/access.log" common
 
     #
     # If you prefer a logfile with access, agent, and referer information
@@ -368,7 +368,7 @@ DefaultType text/plain
     # TypesConfig points to the file containing the list of mappings from
     # filename extension to MIME-type.
     #
-    TypesConfig <%= httpd_etc_dir %>/mime.types
+    TypesConfig <%= httpd.etc_dir %>/mime.types
 
     #
     # AddType allows you to add to or override the MIME configuration
@@ -451,7 +451,7 @@ TraceEnable off
 # necessary.
 
 # Server-pool management (MPM specific)
-Include <%= httpd_etc_dir %>/extra/*.conf
+Include <%= httpd.etc_dir %>/extra/*.conf
 
 
 #
@@ -464,4 +464,4 @@ SSLRandomSeed startup builtin
 SSLRandomSeed connect builtin
 </IfModule>
 
-#Include <%= httpd_etc_dir %>/other/*.conf
+#Include <%= httpd.etc_dir %>/other/*.conf
