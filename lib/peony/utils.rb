@@ -7,22 +7,17 @@ module Peony
       end
     end
 
-    def template(from, to, override=false)
+    def template(from, to, override=false, sudo=false)
       template = find_templates(from).first
       raise "Can't find tempalte #{from} in directory #{template_paths}." unless template
       raise "File #{to} have already exists." if !override && File.exists?(to)
       say "copy #{template} to #{to}", :green
-      begin
-        open(to, 'w+') do|out|
-          out.write(erb(template))
-        end
-      rescue Errno::EACCES => e
-        tmp = "/tmp/peony-#{rand(10000)}"
-        open(tmp, 'w+') do|out|
-          out.write(erb(template))
-        end
-        sudo "mv #{tmp} #{to}"
+
+      target = sudo ? "/tmp/peony-#{rand(10000)}" : to
+      open(target, 'w+') do|out|
+        out.write(erb(template))
       end
+      sudo "mv #{tmp} #{to}" if sudo
     end
 
     # ### erb

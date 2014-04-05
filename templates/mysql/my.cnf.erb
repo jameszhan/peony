@@ -23,6 +23,7 @@ default-character-set = <%= mysql.charset %>
 innodb_buffer_pool_size = 128M
 
 log-error = <%= mysql.log_error %>
+pid-file = <%= mysql.pid_file %>
 
 # Remove leading # to turn on a very important data integrity option: logging
 # changes to the binary log between backups.
