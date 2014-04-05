@@ -1,4 +1,4 @@
-extend Peony::Utils
+extend Peony::Configure
 extend Peony::Shell
 extend Peony::Actions
 

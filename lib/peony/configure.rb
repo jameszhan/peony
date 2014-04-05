@@ -1,41 +1,5 @@
 module Peony
-  module Utils
-    
-    def parse_args
-      ARGV.each do|arg|
-        set $1.strip.to_sym, $2 if arg =~ /([^=]+)=(.+)/
-      end
-    end
-
-    def template(from, to, override=false, sudo=false)
-      template = find_templates(from).first
-      raise "Can't find tempalte #{from} in directory #{template_paths}." unless template
-      raise "File #{to} have already exists." if !override && File.exists?(to)
-      say "copy #{template} to #{to}", :green
-
-      target = sudo ? "/tmp/peony-#{rand(10000)}" : to
-      open(target, 'w+') do|out|
-        out.write(erb(template))
-      end
-      sudo "mv #{tmp} #{to}" if sudo
-    end
-
-    # ### erb
-    # Evaluates an ERB block in the current scope and returns a string.
-    #
-    #     a = 1
-    #     b = 2
-    #
-    #     # Assuming foo.erb is <%= a %> and <%= b %>
-    #     puts erb('foo.erb')
-    #
-    #     #=> "1 and 2"
-    #
-    # Returns the output string of the ERB template.
-    def erb(file, b=binding)
-      require 'erb'
-      ERB.new(File.read(file), nil, '-').result(b)
-    end
+  module Configure
 
     # ### set
     # Sets settings.

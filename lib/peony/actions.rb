@@ -12,7 +12,7 @@ module Peony
     # Returns the given path relative to the absolute root (ie, root where
     # the script started).
     #
-    def relative_to_original_destination_root(path, remove_dot = true)
+    def original_destination_root(path, remove_dot = true)
       path = path.dup
       if path.gsub!(destination_stack[0], '.')
         remove_dot ? (path[2..-1] || '') : path
@@ -21,8 +21,46 @@ module Peony
       end
     end
 
+
+    def parse_args
+      ARGV.each do |arg|
+        set $1.strip.to_sym, $2 if arg =~ /([^=]+)=(.+)/
+      end
+    end
+
+    def template(from, to, override=false, sudo=false)
+      template = find_templates(from).first
+      raise "Can't find tempalte #{from} in directory #{template_paths}." unless template
+      raise "File #{to} have already exists." if !override && File.exists?(to)
+      say "copy #{template} to #{to}", :green
+
+      target = sudo ? "/tmp/peony-#{rand(10000)}" : to
+      open(target, 'w+') do |out|
+        out.write(erb(template))
+      end
+      sudo "mv #{tmp} #{to}" if sudo
+    end
+
+    # ### erb
+    # Evaluates an ERB block in the current scope and returns a string.
+    #
+    #     a = 1
+    #     b = 2
+    #
+    #     # Assuming foo.erb is <%= a %> and <%= b %>
+    #     puts erb('foo.erb')
+    #
+    #     #=> "1 and 2"
+    #
+    # Returns the output string of the ERB template.
+    def erb(file, b=binding)
+      require 'erb'
+      ERB.new(File.read(file), nil, '-').result(b)
+    end
+
+
     def mkdir_p(*dirs)
-      dirs.each do|dir|
+      dirs.each do |dir|
         say "mkdir #{dir}", :yellow, true
         FileUtils.mkdir_p(dir) if !FileTest.exists?(dir)
         fail "#{dir} must be a directory!" unless FileTest.directory?(dir)
@@ -121,7 +159,7 @@ module Peony
     def in_root
       inside(destination_stack.first) { yield }
     end
-    
+
     # Loads an external file and execute it in the instance binding.
     #
     # ==== Parameters
@@ -136,22 +174,22 @@ module Peony
     #
     def apply(path, config={})
       verbose = config.fetch(:verbose, true)
-      is_uri  = path =~ /^https?\:\/\//
-      path    = find_recipes(path).first unless is_uri
+      is_uri = path =~ /^https?\:\/\//
+      path = find_recipes(path).first unless is_uri
 
       say_status :apply, path, verbose
       self.padding.up if verbose
 
       if is_uri
-        contents = open(path, 'Accept' => 'application/x-peony-template') {|io| io.read }
+        contents = open(path, 'Accept' => 'application/x-peony-template') { |io| io.read }
       else
-        contents = open(path) {|io| io.read }
+        contents = open(path) { |io| io.read }
       end
 
       instance_eval(contents, path)
       self.padding.down if verbose
     end
-    
+
     # Executes a command returning the contents of the command.
     #
     # ==== Parameters
@@ -166,7 +204,7 @@ module Peony
     #   end
     #
     def run(command, config={})
-      destination = relative_to_original_destination_root(destination_root, false)
+      destination = original_destination_root(destination_root, false)
       desc = "#{command} from #{destination.inspect}"
 
       if config[:with]

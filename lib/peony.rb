@@ -5,12 +5,14 @@ module Peony
   PREFIX = File.dirname(__FILE__)
   ROOT = File.expand_path('../../', __FILE__)
 
-  autoload :Utils,      'peony/utils'
-  autoload :Shell,      'peony/shell'
-  autoload :Actions,    'peony/actions'
-  autoload :LineEditor, 'peony/line_editor'
   autoload :Scope,      'peony/scope'
   autoload :Settings,   'peony/settings'
+  autoload :Configure,  'peony/configure'
+
+  autoload :Shell,      'peony/shell'
+  autoload :LineEditor, 'peony/line_editor'
+  autoload :Actions,    'peony/actions'
+
   
   Error = Class.new(Exception)
   

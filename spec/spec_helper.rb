@@ -13,7 +13,7 @@ require 'peony'
 
 class PeonyScope
   include Rake::DSL  if Rake.const_defined?(:DSL)
-  include Peony::Utils
+  include Peony::Configure
   include Peony::Shell
   include Peony::Actions
 end
