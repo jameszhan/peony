@@ -49,6 +49,7 @@ namespace :db do
         run mysql.run_cmd.call(t)
       end
     end
+
 =begin
     [:start].each do|t|
       desc "#{t} mysql instance."
@@ -57,6 +58,7 @@ namespace :db do
       end
     end
 =end
+
     desc 'Set mysql root user password.'
     task :set_root_pass do
       run "#{mysql.mysqladmin} --no-defaults --port=#{mysql.port} --user=root --protocol=tcp password '#{mysql.password}'"

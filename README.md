@@ -103,7 +103,6 @@ if you want to run peony command in any directory, you can add peony_root to you
 
 ### generated directory convension
 <pre>
-
   |--u
     |--bin
     |--etc
