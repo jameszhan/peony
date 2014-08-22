@@ -14,15 +14,14 @@ set_default :group, 'admin'
 namespace :settings do
   desc 'List all the settings.'
   task :list do
-    settings.scopes.each do|name, scope|
-      say "scope: #{name}", :yellow
-        settings.with(scope) do
-          scope.each do|k, _|
-            with_padding do
-              say "#{k} = #{settings.send(k)}", :green, true
-            end
-          end
+    travel(settings.root_scope) do|_scope, k|
+      with_padding do
+        begin
+          say "#{_scope.name == :root ? '' : "#{_scope.name}."}#{k} = #{_scope.send(k)}", :green, true
+        rescue Exception
+          say e.message, :red, true
         end
+      end
     end
   end
 end

@@ -69,9 +69,14 @@ module Peony
       ret.nil? && block_given? ? yield : ret
     end
 
+    def children
+      @children ||= {}
+    end
+
     def new_scope(name)
       clazz = self.class
       self.send(name) || Scope.new(name, self) do|_name, _scope|
+        children[_name] = _scope
         clazz.send :define_method, _name do
           _scope
         end

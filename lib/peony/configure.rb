@@ -46,6 +46,16 @@ module Peony
       end
     end
 
+    def travel(scope, &block)
+      say "scope: #{scope.name}", :yellow
+      scope.each do |_k, _|
+        block.call scope, _k
+      end
+      scope.children.each do|_name, _scope|
+        travel(_scope, &block)
+      end
+    end
+
     def template_paths
       ["#{Dir.pwd}/templates", File.expand_path('../../templates', __dir__)]
     end

@@ -18,3 +18,6 @@ tmp
 *.ipr
 *.iml
 *.iws
+
+.rakeTasks
+
