@@ -7,7 +7,7 @@ scope :mysql do
 
   set_default :data_dir,          ->{ "#{data_dir}/mysql/#{mysql.port}" }
   set_default :log_dir,           ->{ "#{log_dir}/mysql/#{mysql.port}" }
-  set_default :config_file,       ->{ "/etc/my.cnf" }
+  set_default :config_file,       ->{ '/etc/my.cnf' }
 
   set_default :log_error,         ->{ "#{mysql.log_dir}/error.log" }
 
@@ -43,7 +43,7 @@ namespace :db do
       end
     end
 
-    [:start, :stop, :restart, :reload, :"force-reload", :status].each do|t|
+    [:start, :stop, :restart, :reload, :'force-reload', :status].each do|t|
       desc "#{t} mysql instance."
       task t do
         run mysql.run_cmd.call(t)
